@@ -22,7 +22,10 @@ ENDIF
 *
 * now upload the report to RIC
 *
+
 UploadReport("invoices.xml", "invoices/invoices123", "demo")
+return
+
 
 PROCEDURE UploadReport
 LPARAMETERS tcXmlFileName, tcRemoteLocation, tcOrganization

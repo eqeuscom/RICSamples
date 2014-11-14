@@ -37,14 +37,13 @@ loCustomerAPI = loBridge.CreateInstance("RICAPIClientLib.API.CustomerAPIClient",
 IF !EMPTY(loBridge.cErrorMsg)
 	? loBridge.cErrorMsg
 endif
-loCustomerAPI.DeleteOrganization("c37c1017-aaec-498f-8e9a-938b05f8e890")
 
 LOCAL lcOrganizationName, lcSubdomainName, lcAdminUserName, lcAdminUserPassword
 
 lcOrganizationName = "Eqeus.com demo" && Enter the organization name here
 lcSubdomainName = "demo" && enter your domain here (no spaces)
 lcAdminUserName = "admin" && user name, no spaces
-lcAdminUserPassword = "admin123" && yourpasswordhere
+lcAdminUserPassword = "" && yourpasswordhere
 
 *
 * add a new organization/domain

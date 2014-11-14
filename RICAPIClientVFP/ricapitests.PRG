@@ -1,4 +1,7 @@
-clear
+CLEAR
+*
+* set up wwDotNetBridge
+*
 do wwDotNetBridge
 LOCAL loBridge as wwDotNetBridge
 loBridge = CreateObject("wwDotNetBridge","V4")
@@ -15,7 +18,15 @@ loBridge = CreateObject("wwDotNetBridge","V4")
 *
 LOCAL loCustomerAPI, retval, lcOrgID, loOrg, lcSecret
 
-loCustomerAPI = loBridge.CreateInstance("RICAPIClientLib.API.CustomerAPIClient","martinsu","aaa")
+LOCAL lcCustomerName, lcCustomerPassword
+
+lcCustomerName = "martinsu"
+lcCustomerPassword = "aaa"
+
+*
+* set up the API client object
+*
+loCustomerAPI = loBridge.CreateInstance("RICAPIClientLib.API.CustomerAPIClient", lcCustomerName, lcCustomerPassword)
 ? loBridge.cErRORMSG
 ListOrganizations(loCustomerAPI, loBridge)
 *
@@ -107,7 +118,7 @@ ListOrganizations(loCustomerAPI, loBridge)
 PROCEDURE ListOrganizations
 LPARAMETERS oCustomerAPI, oBridge
 *
-* list of organizations/domains
+* returns the list of organizations/domains for the current customer
 *
 ? "getting organizations ..."
 retval = oCustomerAPI.GetOrganizations()
@@ -117,6 +128,7 @@ IF retval.IsOK
 	FOR lnX = 0 TO loOrgs.Count-1
 		loOrg = loOrgs.Item(lnX)
 		? loOrg.ID, ALLTRIM(STR(lnX))+":",loOrg.Name+" ("+loOrg.SubDomainName+".reportsincloud.com)"
+		_cliptext = loOrg.ID
 	ENDFOR
 ELSE
 	_cliptext = retval.ErrorMessage
