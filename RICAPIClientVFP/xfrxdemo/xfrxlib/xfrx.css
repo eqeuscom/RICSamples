@@ -1,0 +1,16 @@
+
+a.xfrx_Pbookmark { font-family: Verdana,Tahoma; font-size: 10pt; color:Blue; white-space: nowrap;}
+ul.xfrx_Pbookmark { margin: 15px;}
+li.xfrx_Pbookmark { }
+
+a.xfrx_bookmark { font-family: Verdana,Tahoma; font-size: 10pt; color:Blue; white-space: nowrap;}
+ul.xfrx_bookmark { margin: 10px;}
+li.xfrx_bookmark { }
+
+.italics, .bold_italics {font-style:italic;}
+
+.bold,.bold_italics {font-weight:bold;}
+
+
+
+

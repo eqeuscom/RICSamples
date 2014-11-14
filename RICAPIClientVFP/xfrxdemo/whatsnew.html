@@ -1,0 +1,2230 @@
+<html>
+	<head>
+		<title>XFRX readme</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1250">
+		<style> <!-- A:hover {background-color:#cccccc;}
+	/* Style Definitions */ p.MsoNormal, li, div, td {margin:0in; margin-bottom:.0001pt; font-size:10.0pt; font-family:"Verdana";}
+    table.tbl td.fsto {}
+	table.tbl td.fst {text-align:right;border-width:0px;font-weight:bold;}
+	table.tbl td.hdr {background-color:silver;border-width:0px;font-weight:bold;}
+	table.tbl td {border: solid 0px blue; text-align:center;}
+	h2 {margin-right:0in; margin-left:0in; font-size:18.0pt; font-family:"Verdana"; font-weight:bold;}
+	h3 {margin-right:0in; margin-left:0in; font-size:12pt; font-family:"Verdana"; font-weight:bold;}
+	h4 {margin-right:0in; margin-left:0in; font-size:10pt; font-family:"Verdana"; font-weight:bold;}
+	a:link, span.MsoHyperlink {color:crimson; font-weight:normal; text-decoration:none none;}
+	a:visited, span.MsoHyperlinkFollowed {color:crimson; font-weight:normal; text-decoration:none none;}
+	dt {font-weight: bold; font-size:10.0pt; font-family:Verdana}
+	dd {font-size:10.0pt; font-family:Verdana; }
+	p {margin-right:0in; margin-left:0in; font-size:10.0pt; font-family:Verdana;}
+	pre {margin:0in; margin-bottom:.0001pt; font-size:10.0pt; font-family:Courier-new;}
+	tt {font-family:Tahoma;}
+	p.headline, li.headline, div.headline {margin-right:0in; margin-left:0in; font-size:10.5pt; font-family:Verdana;}
+	p.expldiv, li.expldiv, div.expldiv {margin-top:6.0pt; margin-right:0in; margin-bottom:6.0pt; margin-left:22.5pt; border:none; padding:0in; font-size:10.0pt; font-family:Verdana;}
+	@page Section1 {size:595.3pt 841.9pt; margin:70.85pt 70.85pt 70.85pt 70.85pt; }
+	div.Section1 {page:Section1;}
+    pre {font-family: 'Courier New', monospace;} 
+	/* List Definitions */ ol {margin-bottom:0in;}
+	ul {margin-bottom:0in;}
+		    .xftable {
+		        border: solid 1px black;
+		        border-collapse: collapse;
+		    }
+		        .xftable tr td {
+		            padding: 5px;
+font-size:10.0pt; font-family:Verdana;
+text-align: center;
+border-right:solid 1px silver
+		        }
+		        .xftable tr th  {
+		        background-color: silver;
+		            padding: 5px;
+font-size:10.0pt; font-family:Verdana;
+		        }
+
+	--></style>
+	</head>
+	<body vLink="crimson" link="crimson" bgColor="white">
+        <!--
+		--
+		--
+		--
+		-- Release notes version 15.1
+		--
+		--
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 15.1, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;5&nbsp;Sep 2014
+		</p>
+		<div style="BORDER-RIGHT: red 2px solid; PADDING-RIGHT: 8px; BORDER-TOP: red 2px solid; PADDING-LEFT: 8px; PADDING-BOTTOM: 8px; BORDER-LEFT: red 2px solid; PADDING-TOP: 8px; BORDER-BOTTOM: red 2px solid">
+			<B>Important installation note for the latest version</B>
+			<UL>
+				<LI>
+				<B>VFP 9.0: UtilityReportListener class in XFRX</B>
+				<br>
+Since version 12.4 the XFRXListener class (which is used when running reports in VFP 9.0 in the object assisted (report listener) mode) is derived from the UtilityReportListener class, which is not included inside XFRX.PRG (XFRX.FXP) and needs to be provided for XFRX to run correctly. 
+
+UtilityReportListener is a FFC class, which takes care, via its predecessor FXListener, of the new dynamic reporting features introduced in VFP 9.0 SP2. It is implemented in ReportListener.vcx class library, which is by default stored in the FFC subdirectory of the VFP home directory. In the development environment you make it available by executing the following command:
+<br>
+<pre>
+SET CLASSLIB TO (HOME()+"ffc\_reportlistener")
+</pre>
+<br>To distribute UtilityReportListener with your application you need to include the following FFC files (all available in the FFC directory):
+<br><ul>
+	<li> _reportlistener.vcx
+<li> reportlisteners.h
+<li> reportlisteners_locs.h
+<li> foxpro_reporting.h
+<li> _frxcursor.vcx
+<li> _frxcursor.h
+<li> _gdiplus.vcx
+<li> gdiplus.h
+</ul>
+<br>
+A drawback of including the FFC classes to your project is that they add almost 1MB to the final exe size so alternatively, if you don't use the dynamic features in SP2 and you would like to reduce the final exe size, you can use a UtilityReportListener implementation that comes in with the XFRX package in UtilityReportListener.zip. This implementation corresponds to the pre-SP2 FFC class and is only about 30KB. To use the alternative implementation add the following files to your project (all available in the UtilityReportListener.zip archive):
+<br><ul>
+	<li> reportlisteners.h
+<li> reportlisteners_locs.h
+<li> foxpro_reporting.h
+<li> utilityReportListener.prg
+</ul>
+<br>and make the implementation visible by executing the following command before running XFRX:
+<br><pre>
+SET PROCEDURE TO utilityReportListener.prg ADDITIVE
+</pre>
+				<p>
+		</div>
+<p>
+		<div style="BORDER-RIGHT: red 2px solid; PADDING-RIGHT: 8px; BORDER-TOP: red 2px solid; PADDING-LEFT: 8px; PADDING-BOTTOM: 8px; BORDER-LEFT: red 2px solid; PADDING-TOP: 8px; BORDER-BOTTOM: red 2px solid">
+			<B>Important installation notes for 12.x versions and newer</B>
+			<UL>
+				<LI>
+				<B>VFP 6.0: </B>The XFRX previewer component requires <STRONG>FOXTOOLS.FLL</STRONG> library 
+						if used in VFP 6.0.
+				<LI>
+					<STRONG>XFRXLIB.FLL </STRONG>now also requires <STRONG>MSVCP71.DLL</STRONG> library 
+					to be installed (the previous version required <STRONG>GDIPLUS.DLL </STRONG>and <STRONG>
+						MSVCR71.DLL</STRONG> libraries), all three libraries are required now</LI></UL>
+		</div>
+<H3>New features</H3>	
+    <ul>
+    <li><b>New output type: Native Excel (xlsx) output</b> 
+        <br />
+        <br />
+            The Excel application is not required and does not need to be installed to generate the documents.
+            There are currently two output options: NATIVE_FXLSX and NATIVE_PFXLSX (plain layout). NATIVE_PFXLSX, the plain layout, usually provides the best layout results, 
+                minimizing the number of rows and columns in the output document, but the layout may not be up to the pixel exactly the same as the source report. NATIVE_FXLSX generates
+                more accurate layout but the resulting number of columns and rows may be higher.
+        <br />
+        <br />
+       </li>
+    <li>New output types: DOC2PDF and FDOC2PDF - saves the output to DOC and then exports to PDF via Word. Word 2007 or newer is required</li>
+    <li>Experimental support of multi detail bands in VFP 8.0. Can be switched on with loSession.lMultiDetailBehavior=.T.</li>
+    <li>Enhanced support for Asian languages throughout the system</li>
+    <li>Font embedding support for all Word output types</li>
+    <li>FROM, TO, BPP, JPEGQUALITY, THUMBNAILWIDTH, THUMBNAILHEIGHT, PAGESPERSHEET, ALLEVENODD parameters are now accessible via SetOtherParams()</li>
+    </ul>
+<H3>Bugs fixed</H3>
+<UL type="disc">
+    <li>PDF output type</li>
+    <ul>
+        <li>Enhanced font support on Windows 7/8 - platform specific encoding</li>
+        <li>Crashing on fonts with missing locations table</li>
+        <li>Better support for font embedding, especially symbol/barcode fonts</li>
+        <li>Enhanced support of fonts with no unicode encoding</li>
+        <li>Lines rendering precision enhanced</li>
+        <li>PDF file trailer inconsistency fixed</li>
+        <li>Enhanced support for Japanese characters</li>
+        <li>Better support of RESOID/FontCharset/Codepage</li>
+    </ul>
+    <li>Pictures/OLE bound now fully supported  (Clip Contents, Scale- retain, Scale-fill)</li>
+    <li>Correct size evaluation for png/gif/tiff/emf image formats</li>
+    <li>Freezing in 64-bit OS's fixed</li>
+    <li>WITH RETURN ENDWITH bug fixed</li>
+    <li>m dot bugs fixed</li>
+    <li>Fatal error when sending an empty or non-existent printer name</li>
+    <li>Printer properties freezing problem fixed</li>
+    <li>Temporary images were incorrectly saved in the current folder</li>
+    <li>Rectangle backcolor fix for open office and native word output</li>
+    <li>Fixes to support SET EXACT ON setting</li>
+    <li>Fixed problems with overlapping multiline textboxes generation</li>
+    <li>Excel output: SHEET_PER_PAGE flag was not working in VFP 9.0</li>
+    <li>Native Word output: added setAuthor(), setTitle(),
+setSubject(), setKeywords(), setComments(),
+setCategory(), setManager(), setCompany() and Custom Properties</li>
+    <li>Native Word output: images in headers/footers support</li>
+    <li>Office 2007: enhanced Arabic and Hebrew font support</li>
+    <li>DOC and FDOC output types - layout enhancements, Word 2007 compatibility, metadata generation</li>
+
+    <li>Enhanced internal diagnositics</li>
+
+</ul>
+	
+<br />
+		<hr width="75%">
+        <!--
+		--
+		--
+		--
+		-- Release notes version 15.0
+		--
+		--
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 15.0, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;18&nbsp;Mar 2014
+		</p>
+<H3>New features</H3>	
+    <ul>
+        <li>
+            <b>New output type: Plain HTML output</b>
+            <br /><br />
+            This output type works in a similar fashion to the plain excel output type: The objects on the page are aligned into a grid, each object going into a separate cell, and then the output is layed out 
+            as a table. Lines and rectangles are displayed as table cell borders. Fonts, colors and sizes are defined via CSS.
+            <br /><br />
+            This solution produces a clean, fast rendering, cross-browser compatible HTML output, suitable for web pages or emails. (Click here for a sample document: <a href="http://www.eqeus.net/xfrx/files/html_plain_sample1.html">Sample1</a>)
+            <br /><br />
+            The output is invoked by "HTMLPLAIN" output type parameter:
+            <div style="border: solid 1px black; margin:14px; padding: 4px">
+            <pre>
+loSession = xfrx("XFRX#INIT")
+lnRetVal = loSession.SetParams("output.html",,,,,,"HTMLPLAIN")
+If lnRetVal = 0
+    loSession.ProcessReport("report1")
+    loSession.finalize()
+Endif </pre>
+            </div>
+            By default, the output is a complete self-contained HTML file. You can also use the HTML_NOSTYLES option to process just the inner HTML, without CSS styles, head or body tags:
+            <div style="border: solid 1px black; margin:14px; padding: 4px">
+            <pre>
+loSession = xfrx("XFRX#INIT")
+lnRetVal = loSession.SetParams("output.html",,,,,,"HTMLPLAIN")
+If lnRetVal = 0
+    loSession.SetOtherParams("HTML_NOSTYLES", .T.)
+    loSession.ProcessReport("report1")
+    loSession.finalize()
+Endif </pre>
+            </div>
+            Notes:
+            <ul>
+                <li>This feature requires .NET framework 3.5. The HTML is produced by a .NET console application which reads XML files generated by XFRX and coverts them. This console application (xfrxt.exe) needs to be distributed along with the application.</li>
+                <li>This output type currenty does not support images</li>
+            </ul>
+        </li>
+    </ul>
+<H3>Bugs fixed</H3>
+<UL type="disc">
+    <li>Better (more precise) output for multiline labels/textboxes</li>
+    <li>Output directory write permission check</li>
+    <li>DOCX - codepage problems, backcolor problems </li>
+    <li>DOCX - text rotation</li>
+    <li>DOCX - speed enhancement</li>
+    <li>DOCX, OpenOffice - intermittent page number fix</li>
+    <li>DOC - crossover tags</li>
+    <li>Enhanced codepage conversion</li>
+    <li>Enhanced support if asian codepages in OpenOffice and DOCX</li>
+    <li>PDF - fixed problems with displaying Arial Narrow and Arial Black fonts</li>
+    <li>Listener mode - db area number preservation fix</li>
+    <li>XFRX Previewer - "mdot" bug fixed</li>
+    <li>HTML output - font family name bug</li>
+    <li>OpenOffice - image rotation</li>
+    <li>OpenOffice - hyperlink bug</li>
+
+</ul>
+	
+<br />
+		<hr width="75%">
+
+
+        <!--
+		--
+		--
+		--
+		-- Release notes version 14.7
+		--
+		--
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 14.7, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;30&nbsp;Nov 2013
+		</p>
+<H3>New features</H3>	
+    <ul>
+        <li>
+            <b>New output type: Native Word (docx) output - the Word application is not required and does not need to be installed to generate the documents</b>
+            <br /><br />
+            The new output type can generate Word documents in docx (OpenXML) format both in the standard and flow layout. The generated documents are equivalent to the standard word documents
+            generated by XFRX and can be opened in Word versions 2003 (with a plugin), 2007 and newer. The output type codes are "NATIVE_DOCX" (standard) and "NATIVE_FDOCX" (flow layout).
+            <br /><br />
+            <b>Overview:</b>
+            <br /><br />
+            <table class="xftable">
+                <tr>
+                    <th>Output type code</th>
+                    <th>Standard layout</th>
+                    <th>Flow layout</th>
+                    <th>Output format</th>
+                    <th>Word version needed to generate</th>
+                    <th>Word version needed to view</th>
+                </tr>
+                <tr>
+                    <td>DOC</td>
+                    <td>yes</td>
+                    <td>no</td>
+                    <td>DOC</td>
+                    <td>2000+</td>
+                    <td>2000+</td>
+                </tr>
+                <tr>
+                    <td>FDOC</td>
+                    <td>no</td>
+                    <td>yes</td>
+                    <td>DOC</td>
+                    <td>2000+</td>
+                    <td>2000+</td>
+                </tr>
+                <tr>
+                    <td>NATIVE_DOCX</td>
+                    <td>yes</td>
+                    <td>no</td>
+                    <td>DOCX</td>
+                    <td>none</td>
+                    <td>2003+</td>
+                </tr>
+                <tr>
+                    <td>NATIVE_FDOCX</td>
+                    <td>no</td>
+                    <td>yes</td>
+                    <td>DOCX</td>
+                    <td>none</td>
+                    <td>2003+</td>
+                </tr>
+            </table>
+            <br /><br />
+            <b>Usage:</b>
+            <br /><br />
+            All you need to do is to specify NATIVE_DOCX or NATIVE_FDOCX. This is a pure VFP implementation so no other setup is needed, except MD5.FLL library MD5.FLL, which is a free
+            library implementing the MD5 algorithm. MD5.FLL was written by Duke Lotherington, Visual Records Consulting, 3944 Murphy Canyon Rd, San Diego CA 92123, duke@visualrecords.com
+            (http://www.leafe.com/dls/vfp)
+            <br /><br />
+            Pre VFP-9 mode:
+            <pre>
+
+loSession= xfrx("XFRX#INIT")
+lnRetVal = loSession.SetParams("output.docx",,,,,,"NATIVE_FDOCX")
+If lnRetVal = 0
+    loSession.ProcessReport("report1")
+    loSession.finalize()
+Endif
+            </pre>
+            <br />
+            VFP-9 mode:
+            <pre>
+
+loxfrx = XFRX("XFRX#LISTENER")
+lnRetval = loxfrx.SetParams("output.docx",,,,,,"NATIVE_FDOCX")
+IF lnRetval = 0
+    REPORT FORM report1 OBJECT loxfrx
+endif
+
+            </pre>
+        </li>
+    </ul>
+<H3>Bugs fixed</H3>
+<UL type="disc">
+    <li>XFRX diagnosis module does not require FOXTOOLS.FLL in compile time any more
+    </li>
+    <li>XML output type now includes the code page defined in SetParams</li>
+    <li>Pictures rotation is now supported DOCX output. We will be adding this to other output types (where doable)</li>
+    <li>FIXED: Open office output type does not include the correct code page in listener mode</li>
+    <li>FIXED: Report previewer: unpaired Lockscreen = .T. / .F. </li>
+</ul>
+	
+<br />
+		<hr width="75%">
+
+		<!--
+		--
+		--
+		--
+		-- Release notes version 14.6
+		--
+		--
+		--
+		-->
+
+		<H2 class="Section1">
+			XFRX versions 14.6, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;4&nbsp;Nov 2013
+		</p>
+<H3>New features</H3>	
+    <ul>
+        <li>
+            <b>XFRX Diagnosis</b>
+            <br /><br />
+            Running XFRX with the following parameters:
+            <div style="padding:8px;">
+                <pre>
+DO xfrx WITH "XFRX#DIAGNOSIS", "DIAGNOSIS.TXT"
+</pre>
+            </div>
+            Will create a new file specified by the 2nd parameter (DIAGNOSIS.TXT), which is useful when dealing with setup problems. It lists the version number, registration string,
+            vcx, dll and fll file version and locations and other information. Please review this file when dealing with setup problems and also please send it to us attached to support
+            questions.
+            <br />
+            <br />
+            </li>
+        <li>
+            <b>New output types - "DOCX" and "FDOCX"</b>
+            <br /><br />
+            The new output types run the standard (DOCX) or flow layout (FDOCX) conversion and generate word documents with the DOCX extension (the OpenXML format). This output type
+            requires Word 2007 or newer to be installed on the computer. (until the next XFRX release ... at least ;)
+            </li>
+    </ul>
+<H3>Bugs fixed</H3>
+<UL type="disc">
+    <li>
+        Word standard and flow layout output
+        <ul>
+            <li>Intermittent freezing of Word 2007 when previewing a document generated by XFRX</li>
+            <li>Textbox height calculation fix - this was a Word 2010-only specific fix</li>
+            <li>Exporting to DOC format using Word 2010 or 2013 will save the document as a DOCX document. Unfortunately this was the only way to solve the intermittent Word 2010 freezing, caused
+                by changes in the HTML output support in these versions.
+            </li>
+        </ul>
+    </li>
+	<li>PDF output
+	<ul>
+		<li>Additional enhancements to 32bit images rendering</li>
+        <li>Enhanced support for Bold, Italic and Bold/Italic font styles when used with non-Latin1 character sets</li>
+	</ul>
+	<li>HTML output
+	<ul>
+		<li>Output to HTML in VFP 9.0 going via XFF file or XFRX previewer displayed the page footer over the bottom of the detail output. This problem has been fixed.</li>
+	</ul>
+	<li>XFRX Print and Previewer Modules
+	<ul>
+		<li>Fixing duplicate constant compile error</li>
+		<li>Fixed intermittent freezing of the printer properties dialog box</li>
+	</ul>		
+	<li>Open office output
+	<ul>
+		<li>proper attributes encoding and code page setting</li>
+		<li>better environment cleanup method</li>
+        <li>layout enhancements - textbox background and transparency settings, rotation</li>
+	</ul>
+</ul>
+	
+<br />
+		<hr width="75%">
+
+		<!--
+		--
+		--
+		--
+		-- Release notes version 14.5
+		--
+		--
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 14.5, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;12&nbsp;May 2013
+		</p>
+<H3>New features</H3>	
+    <ul>
+	<li>
+	<b>Better barcode support: new PDF output directive - #UR SYMBOLFONT</b>
+	<br><br>
+    Put "#UR SYMBOLFONT" into the comment of the report field that contains the barcode. This will instruct the engine not to do any codepage conversions and flag the font as a symbol font in the PDF document.
+					</ul>
+<H3>Bugs fixed</H3>
+<UL type="disc">
+	<li>PDF output
+	<ul>
+		<li>32bit images are now rendering properly
+		<li>document properties longer than 255 characters are now supported
+		<li>Fixed errors in digitally signed documents on certain computers
+	</ul>
+	<li>XFRX Draw engine
+	<ul>
+		<li>Creating new XFF document is not complaining about exclusive access any more</li>
+	</ul>
+	<li>XFRX Previewer
+	<ul>
+		<li>Intermittent error on mouse-wheel click is fixed</li>
+	</ul>		
+	<li>Reporting engine - affects all output types
+	<ul>
+		<li>Bugs fixed in 'Stretch relative to tallest object in group'
+		<li>Memory leak in hndlib.dll fixed (Many thanks to Borislav Borissov and Martina Jindrova for tracking this down). This error was causing various intermittent layout or structure errors in the generated documents, especially in long documents or when a large amount of documents were created at a time</li>
+	</ul>
+</ul>
+	
+<br />
+		<hr width="75%">
+		<!--
+		--
+		--
+		--
+		-- Release notes version 14.4
+		--
+		--
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 14.4, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;11&nbsp;September 2012
+		</p>
+<H3>New features</H3>	
+    <ul>
+	<li>
+	<b>New output type: Excel plain format (XLSPLAIN)</b>
+	<br><br>
+	The Excel plain output format is an alternative output to Excel that aims to provide cleaner as well as smaller Excel documents. The following are the key differences from the standard Excel output:
+	<ul>
+	  <li>Each report is generated as a single sheet with a single page header at the top of the document and a single page footer at the very bottom. The header/footer sections are not inserted inside the report where the pages would normally break.
+	  <li>The process eliminates empty columns and rows whenever possible.
+	  <li>The report layout is automatically adjusted to eliminate narrow rows and columns.
+	  <li>HORIZONTAL_ADJUSTMENT and VERTICAL_ADJUSTMENT are no longer needed. The system analyzes the report layout on the fly and identifies the places where objects can be aligned without affecting the final output.
+	</ul>
+	</p>
+	<p>
+	To invoke the Excel plain format, send "XLSPLAIN" string as the output type parameter. Example (VFP 9.0):
+	</p>
+						<div style="margin:4px;padding:4px;border:solid 1px gray;">
+					<pre>
+	LOCAL loObj
+	loObj = EVALUATE([XFRX("XFRX#LISTENER")])
+	lnRetVal = loObj.SetParams("test.xls",,,,,,"XLSPLAIN")
+	IF lnRetVal = 0
+		REPORT FORM demoreps\invoices object loObj		
+	ENDIF
+					</pre>
+					</div>
+					<li><b>New previewer extension handler: BeforeExport</b>
+	<br><br>
+	A new extension handler trigger was added: BeforeExport. The method is executed right before the 
+	report is exported to the output format and can be used to parametrize the xfrx session object before exporting. Please see more about extension handlers in chapter <i>Registering an extension handler</i> inside the <i>Common methods and properties</i> chapter at <a href="http://www.eqeus.com/files/XFRXDevGuide.htm#_Toc326496250">http://www.eqeus.com/files/XFRXDevGuide.htm#_Toc326496250</a>.
+	<br><br>
+	<b>Example:</b>
+						<div style="margin:4px;padding:4px;border:solid 1px gray;">
+						<pre>
+use demoreps\invoices order customer
+local loSession, lnRetval, loXFF, loPreview, loScripts
+loSession=EVALUATE([xfrx("XFRX#LISTENER")])
+lnRetVal = loSession.SetParams(,,,,,,"XFF") && no name = just in memory
+If lnRetVal = 0
+	REPORT FORM demoreps\invoices object loSession		
+	*
+	* the XFRX#DRAW object reference is stored in oxfDocument property
+	*
+	loXFF = loSession.oxfDocument
+	*
+	* initialize the previewer 
+	*
+	SET PATH TO xfrxlib
+	SET CLASSLIB TO xfrxlib ADDITIVE 
+	loPreview = CREATEOBJECT("frmMPPreviewer")
+	*
+	* setup the extension handler
+	*
+	loPreview.oExtensionHandler = CREATEOBJECT("SampleExtensionHandler")
+	loPreview.windowtype = 1 
+	loPreview.iTool = 2 && embedded toolbar
+	loPreview.PreviewXFF(loXFF)
+	loPreview.show(1)
+ENDIF
+
+DEFINE CLASS SampleExtensionHandler as Custom
+
+	PROCEDURE BeforeExport
+	LPARAMETERS toSession, toExportParameters
+
+	toSession.setAuthor("Martin") && set the document author property
+	IF toExportParameters.cTarget = "XLS" && (XLS or XLSPLAIN)
+		toSession.SetOtherParams("DISPLAY_GRID_LINES",.F.) && do not display gridlines in excel
+	ENDIF	
+
+ENDDEFINE
+
+                        </pre>
+                        </div>                
+	
+
+					</ul>
+<H3>Bugs fixed</H3>
+<UL type="disc">
+	<li>Excel output type (XLS)
+		<ul>
+		<li>Enhanced footer rendering. The system now eliminates vertical gaps between bottom of the page and the page footer</li>
+		<li><i>'pos' already exists</i> warning message removed
+		</ul>
+</ul>
+	
+<br />
+		<hr width="75%">
+
+	<!--
+		--
+		--
+		--
+		-- Release notes version 14.3
+		--
+		--
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 14.3, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;3&nbsp;June 2012
+		</p>
+<h3>New features and bug fixes</h3>
+<UL type="disc">
+	<li>PDF output
+		<ul>
+		<li>Font glyphs extraction algorithm has been improved, the size of PDF files with embedded font subset is now significantly smaller</li>
+		<li>Date/time metadata now includes the current time zone</li>
+		<li>Word-wrapping algorithm issue fixed in VFP 5</li>
+		<li><b>PDF/A is now supported</b>
+<p>
+PDF/A is an ISO standard for the digital preservation of electronic documents. PDF/A document is a PDF document with specific restrictions that ensure that the document will always display and print exactly the same way, no matter which platform or document viewer is used:
+</p>
+<ul>
+<li>Platform independent
+<li>No hidden or transparent content
+<li>All information needed to display the document is embedded (including fonts)
+<li>Document metadata stored as XML 
+<li>No encryption, no password protection
+<li>No JavaScript or other executable parts
+<li>No LZW compression
+<li>Displayed and printed content must match (all annotations must be printed)
+</ul>
+
+<br/>There are currently two PDF/A specifications:
+<ul>
+<li>PDF/A-1 from 2005
+<li>PDF/A-2 from 2011
+</ul>
+
+<p>XFRX currently supports specification PDF/A-1 Level “B” (PDF/A-1b).
+</p>
+<p>
+<b>Note:</b> Please note the PDF/A-enabled document files can be significantly larger than regular PDF documents because the used fonts must always be included.
+<br/>
+</p>
+<p>
+To generate a PDF/A document, call SetPDFA(.T.) method on the session object before processing. This method is available in VFP8 and VFP9 session objects, as well as the XFRX#DRAW object.
+</p>
+<p>
+Example (VFP 9.0):
+</p>
+				<pre>
+LOCAL loObj
+loObj = EVALUATE([XFRX("XFRX#LISTENER")])
+lnRetVal = loObj.SetParams("pdfa9.pdf",,,,,,"PDF")
+IF lnRetVal = 0
+	loObj.setpdfa(.T.)
+	REPORT FORM demoreps\invoices object loObj		
+ENDIF
+				</pre>
+		
+		</li>
+		</ul>
+
+</UL>
+<br />
+		<hr width="75%">
+	<!--
+		--
+		--
+		--
+		-- Release notes version 14.2
+		--
+		--
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 14.2, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;26&nbsp;September 2011
+		</p>
+<p>
+<h3>New features and bug fixes</h3>
+<UL type="disc">
+	<li>PDF output
+		<ul>
+		<li>Bookmarks and document properties are now encoded in unicode, allowing non-Latin 1 characters to be correctly displayed. 
+	    The text is converted using the default code page or the code page specified in the 4th parameter of the SetParams method (tcCodePage)
+		<li>PDF file size issue fixed - images in the PDF file were saved in BMP format in some scenarios, which was increasing the file size significantly
+		<li>Improved compatibility in appending to existing PDF files
+		<li>Vertical lines rendering problem fixed - in some scenarios vertical lines showed slanted in the PDF output. 
+		<li>Occasional layout issues fixed - word-wrapping algorithm improved
+		</ul>
+	<li>Excel output - the compatibility check window is now always suppressed
+	<li>OpenOffice output types - significant layout improvements in all output types
+	<ul>
+		<li>Multiline export layout fix
+		<li>Transparent background is now correctly rendered
+		<li>field content overflowing boundary box problem fixed
+		<li>Flowmode now respects text horizontal shift within one line
+	</ul>
+	<li>XFRX previewer - intermittent crashing on mouse middle-click fixed
+	<li>XFRX previewer - local variable declaration fixes
+	<li>XFRX previewer - current area reset fix	
+</UL>
+<br />
+		<hr width="75%">
+
+	<!--
+		--
+		--
+		--
+		-- Release notes version 14.1
+		--
+		--
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 14.1, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;6&nbsp;December 2010
+		</p>
+<h3>Office 2010 compatibility notes fixes</h3>
+<UL type="disc">
+  <li>Word 2010 - fixed the problem with missing pictures 
+  <li>Intermittent Excel 2010 freezing fixed
+  <li>Issues with picture frames in flow layout word output fixed
+  <li>"Cannot load Word or Excel application" error message - please be aware XFRX does not support Office 2010 running in "Click to run" setup mode. <br />
+  More info at:
+  <a href="http://xfrx.blogspot.com/2010/12/office-2010-and-click-to-run.html">http://xfrx.blogspot.com/2010/12/office-2010-and-click-to-run.html</a>
+</UL>
+<br />
+		<hr width="75%">
+
+		<!--
+		--
+		--
+		--
+		-- Release notes version 14.0
+		--
+		--
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 14.0, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;19&nbsp;July 2010
+		</p>
+<h3>New features</h3>
+<h4>Digital signatures in PDF</h4>
+<p>
+The digital signature can be used to validate the document content and the identity of the signer. (You can find more at http://en.wikipedia.org/wiki/Digital_signature). XFRX implements the "MDP (modification detection and prevention) signature" based on the PDF specification version 1.7, published in November 2006.
+</p><p>
+The signing algorithm in XFRX computes the encrypted document digest and places it, together with the user certificate, into the PDF document. When the PDF document is opened, the Adobe Acrobat (Reader) validates the digest to make sure the document has not been changed since it was signed. It also checks to see if the certificate is a trusted one and complains if it is not. The signature dictionary inside PDF can also contain additional information and user rights - see below.
+</p><p>
+At this moment XFRX supports invisible signatures only (Acrobat will show the signature information, but there is no visual element on the document itself linking to the digital signature). We will support visible signatures in future versions.
+</p><p>
+In the current version, XFRX is using the CMS/PKCS #7 detached messages signature algorithm in the .net framework to calculate the digest 
+- which means the <b>.NET framework 2.0 or newer is required</b>. The actual process is run via an external exe - "xfrx.sign.net.exe", that is executed during the report conversion process.  In future, we can alternatively use the OpenSSL library instead.
+<p/>
+
+<h4>How to invoke the digital signing</h4>
+<p>
+<i>(Note: the syntax is the same for VFP 9.0 and pre-VFP 9.0 calling methods)</i>
+</p><p>
+To generate a signed PDF document, call the DigitalSignature method before calling SetParams. The DigitalSignature method has 7 parameter:
+</p>
+<p>
+<dt>cSignatureFile</dt>
+<dd>The .pfx file. pfx, the "Personal Information Exchange File". This file contains the public certificate and (password protected) private key. You get this file from a certificate authority or you can generate your own for testing, which for example, OpenSSL (http://www.slproweb.com/products/Win32OpenSSL.html). XFRX comes with a sample pfx that you can use for testing.
+</dd>
+</p>
+<p>
+<dt>cPassword</dt>
+<dd>The password protecting the private key stored in the .pfx file</dd>
+</p>
+<p>
+<dt>nAccessPermissions</dt>
+<dd>
+per PDF specification:
+<br />1 - No changes to the document are permitted; any change to the document invalidates the signature.
+<br />2 - Permitted changes are filling in forms, instantiating page templates, and signing; other changes invalidate the signature. (this is the default value)
+<br />3 - Permitted changes are the same as for 2, as well as annotation creation, deletion and modification; other changes invalidate the signature.
+</dd>
+</p>
+<p>
+<dt>cSignatureName</dt>
+<dd>per PDF specification: The name of the person or authority signing the document. This value should be used only when it is not possible to extract the name from the signature; for example, from the certificate of the signer.
+</dd>
+</p>
+<p>
+<dt>cSignatureContactInfo</dt>
+<dd>per PDF specification: Information provided by the signer to enable a recipient to contact the signer to verify the signature; for example, a phone number.
+</dd>
+</p>
+<p>
+<dt>cSignatureLocation</dt>
+<dd>per PDF specification: The CPU host name or physical location of the signing.
+</dd>
+</p>
+<p>
+<dt>cSignatureReason</dt>
+<dd>per PDF specification: The reason for the signing, such as ( I agree ... ).
+</dd>
+</p>
+<h4>Demo</h4>
+<p>
+The demo application that is bundled with the package (demo.scx/demo9.scx) contains a testing self-signed certificate file (TestEqeus.pfx) 
+and a sample that creates a signed PDF using the pfx. Please note Acrobat will confirm the file has not changed since
+it was signed, but it will complaing the certificate is not trusted - you would either need to add the certificate as a trusted one
+or you would need to use a real certificate from a certification authority (such as VeriSign).
+</p>
+<h4>Feedback</h4>
+<p>
+Your feedback is very important for us. Please let us if you find this feature useful and what features you're missing.
+</p>
+		<hr width="75%">
+	
+		<!--
+		-- Release notes version 12.9 
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 12.9, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;15&nbsp;June 2010
+		</p>
+<H3>Bugs fixed</H3>
+<UL type="disc">
+  <li>PDF output - multiline text rendering - center and right-aligned text is now rendered properly
+  <li>PDF output - specific BMP picture subformats (32 bpp and others) were rendering as a black box. This problem has been fixed.
+  <li>VFP 9 listener mode - Render method now properly calls the chained report listeners' methods
+  <li>The proper field codepage is now stored in the XFRX intermediate file
+  <li>High resolution pictures now render and print properly
+  <li>"@L" picture format is now working correctly in all VFP versions
+  <li>Warning about "page" index overwrite is removed
+  <li>Warning about "pos" index overwrite is removed
+  <li>The correct background color wasn't displaying for fields marked as opaque using a dynamic condition
+  <li>"#UR OUTLINE" and "#UR TOOLTIP" now support numeric values
+  <li>XFRX previewer - an error was showing when no data were loaded
+  <li>XFRX previewer - email icon tooltip fixed
+  <li>XFRX previewer - intermittent crashing was fixed [negative window handlers]
+  <li>XFF Printing - enhanced custom paper-size handling
+  <li>XFF Printing - paper orientation problems fixed
+</ul>
+<p>
+</p>
+		<hr width="75%">
+
+		<!--
+		-- Release notes version 12.8 
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 12.8, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;22&nbsp;November 2009
+		</p>
+		<H3>New features / Updates</H3>
+		<UL type="disc">
+			<li>XFRX previewer - file selection button ([...]) has been added to the export options form
+			<li>XFRX previewer - new properties for default values for zoom, pages-per-sheet, default output name and a starting page:<br />
+				A new object-type property has been added to the XFCont, cntXFRXMultipage and frmMPPreviewer classes: oDisplayDefaults. It has the following properties:
+				<ul>
+				<li>
+				StartingPage (integer) - the 1st page to show in the previewer. Default value is 1.
+				</li>
+				<li>
+				DefaultOutputFileName (string) - the default output file name when exporting from the previewer
+				</li>
+				<li>
+				PagesPerSheet (string) - encoded pages per sheet layout value. Default value: 1x1. Allowed values: 1x1, 2x1, 2x2, 3x1, 3x2, 4x2.
+				</li>
+				<li>
+				ZoomFactor (integer) - the zoom factor. default value = 100. -1 = fit to width, -2 = fit page. The zoom factor will be used only of PagesPerSheet is 1x1, otherwise it defaults to -2.
+				</li>
+				</ul>
+				<br />
+				<b>Example:</b>
+				<pre>
+loPreview = CREATEOBJECT("frmMPPreviewer")
+loPreview.oDisplayDefaults.StartingPage = 2
+loPreview.oDisplayDefaults.DefaultOutputFileName = "invoice15_09"
+loPreview.oDisplayDefaults.ZoomFactor = -1
+loPreview.oDisplayDefaults.PagesPerSheet = "1x1"
+loPreview.PreviewXFF(loXFF)
+loPreview.show(1)
+				</pre>
+		</ul>
+		<H3>Bugs fixed</H3>
+		<UL type="disc">
+			<li>Dynamic properties in VFP 9.0 - dynamic textbox background is now displayed correctly
+			<li>Rectangle-bound scripts in VFP 9.0 are now correctly evaluated
+			<li>Word output - the page margins are updated so that wide reports fit into the paper size
+			<li>PDF output - word wrapping algorithm didn't intermittently work properly with dashes and some other characters that allow for wrapping to a new line
+			<li>PDF output - fonts with no code page are now properly handled if a code page is specified
+			<li>PDF output - left and center alignment calculation shift in GDI+ mode has been fixed
+			<li>Word output - the temporary XML copy of the word document could have been left undeleted with certain Word versions
+			<li>Previewer - XFRX previewer now works properly in top-level forms</li>
+			<li>"@Z$" format string is now handled properly</li>			
+			<li>Printing - the printer paper size is now automatically pre-selected with the report paper size
+			<li>'X_TRIM missing' error is fixed</li>
+			<li>Excel output in VFP 9.0/SP2 now properly exports numeric values and numeric formats - if you need the numeric values, set 
+		       the CallEvaluateContents property of the xfrxlistener to 2.<br/>
+		       More details: the actual bug was caused by the new Listener properties introduced in SP2: CallAdjustObjectSize, CallEvaluateContents.
+		       When the 
+			default parent report listener is used (fxlistener at FFC), it checks for the report dynamics and if there are not any, it sets these
+			two properties to 1 and thus disables the EvaluateContents calls. However, when EvaluateContents is not called, XFRX won't know
+			about the actual numeric value and the output will be exported as a text.
+		</ul>
+<p>
+</p>
+		<hr width="75%">
+
+
+		<!--
+		-- Release notes version 12.7 -- begin --
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 12.7, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;23&nbsp;December 2008
+		</p>
+		<H3>New features / Updates</H3>
+		<UL type="disc">
+			<LI><b>Trim mode is now supported in all VFP versions</b> <br/>
+			In VFP 9.0 the trim mode is controlled by the "<i>Trim mode for character expressions</i>"
+			setting on the "Format" tab in the "Field Properties" form.<br/>
+			In pre-VFP 9.0 version the trimming is controlled by a special string in fields comment: #UR TRIM=, followed by the trim mode code:
+			
+			<table class="tbl">
+			<tr><td class="hdr">Code</td><td class="hdr">Description</td></tr>
+			<tr><td>0</td><td style="text-align:left">Default trimming in pre-VFP 9.0 versions - trim to nearest word</td></tr>
+			<tr><td>1</td><td style="text-align:left">Trim to nearest character</td></tr>
+			<tr><td>2</td><td style="text-align:left">Trim to nearest word</td></tr>
+			<tr><td>3</td><td style="text-align:left">Trim to nearest character, append ellipsis</td></tr>
+			<tr><td>4</td><td style="text-align:left">Trim to nearest word, append ellipsis</td></tr>
+			<tr><td>5</td><td style="text-align:left">Show inner path as ellipsis</td></tr>
+			</table>
+<p>
+<b>Example:</b> #UR TRIM=3 wraps to the nearest character and appends ellipsis
+<p>
+			</li>
+			<LI>Shape fill pattern is now correctly rendered in picture and print output
+			</li>
+			<LI>XFRX Previewer - middle click now closes the active tab
+			</li>
+		</ul>
+		<H3>Bugs fixed</H3>
+		<UL type="disc">
+			<li>Intermittent crashing on Windows Vista with specific printers has been fixed
+			<li>The printed output was occasionally shifted for specific printers
+			<li>Open office output layout issues have been fixed
+			<li>Page-range filtering didn't work for merged reports
+			<li>XFRX previewer issues
+				<ul>
+					<li>Double-click on a custom hyperlink executed the linked event twice
+					<li>Bookmark panel size wasn't setup correctly during drilldown
+					<li>The previewer form didn't work correctly inside top-level forms
+					<li>Occasional screen flickering during drilldown
+					<li>Print options do not show if no printers are installed
+				</ul>
+			</li>
+		</ul>
+<p>
+		<b>Known issue:</b> The full justify feature (&lt;FJ&gt;) does not work in the previewer. We are working on fixing this as soon as possible.
+</p>
+		<hr width="75%">
+
+		<!--
+		-- Release notes version 12.6 -- begin --
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 12.6, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;01&nbsp;August 2008
+		<H3>New features / Updates</H3>
+		<UL type="disc">
+			<LI>
+				<B>Full justification is now supported in PDF, Word output, picture export and the XFRX previewer</B> <br />
+				Add &lt;FJ&gt; into the comments of the fields you want to full justify.
+			</li>
+			<LI>
+				<B>Absolute layout boxes in Word output are now automatically expandable</B>
+			</li>
+			<LI>
+				<B>Picture rotation is now supported in VFP 9.0, using the new SP2 designer user 
+                interface</B>
+			</li>
+			<LI>	<B>XFRX Previewer</b>
+				<UL>
+				<LI>
+				<b>Hyperlink decoration can now be suppressed on the printer output</b><br />
+				A new property has been added to the XFCont, cntXFRXMultipage and frmMPPreviewer classes: UnderlineHyperlinksOnPrint. 
+                    You can use the following values:<br />
+&nbsp; 0 - no decoration for hyperlinks<br />
+&nbsp; 1 - display &quot;normal&quot; hyperlinks in blue, but do not decorate custom event hyperlinks (green)<br />
+&nbsp; 2 - (default value) decorate both blue and green hyperlinks<br />
+                    <br />
+                    To support this, the PrintDocument method of the XFRX#DRAW 
+		    class has a new parameter, tnUnderlineHyperlinksOnPrint, with the same values and logic.<p></li>
+                <li>
+                <b>Custom buttons can now be added to the XFRX previewer toolbar at runtime</b><br />
+                This feature is implemented using the extension handler mechanism: A new method is now supported - ToolbarOnInit, which is invoked at the time the toolbar is initialized.
+                In this method the extension handler can add new buttons to the previewer and their click events can be bound with other methods in the extension handler. A new property 
+                is now supported, too - oPreviewContainer. If it is available, the previewer will automatically fill it with the XFCont object reference for easier access to the previewer
+                properties in the custom buttons click event methods.
+                <p>
+                Example:
+						<div style="margin:4px;padding:4px;border:solid 1px gray;">
+						<pre>
+use demoreps\sales
+local loSession, lnRetval, loXFF, loPreview, loScripts
+loSession=EVALUATE([xfrx("XFRX#LISTENER")])
+lnRetVal = loSession.SetParams(,,,,,,"XFF") && no name = just in memory
+If lnRetVal = 0
+	REPORT FORM demoreps\sales object loSession
+	*
+	* the XFRX#DRAW object reference is stored in oxfDocument property
+	*
+	loXFF = loSession.oxfDocument
+	*
+	* initialize the previewer 
+	*
+	SET PATH TO xfrxlib
+	SET CLASSLIB TO xfrxlib ADDITIVE 
+	loPreview = CREATEOBJECT("frmMPPreviewer")
+	*
+	* setup the extension handler
+	*
+	loPreview.oExtensionHandler = CREATEOBJECT("SampleExtensionHandler")
+	loPreview.windowtype = 1 
+	loPreview.iTool = 2 && embedded toolbar
+*	loPreview.iTool = 1 && standard toolbar
+	loPreview.PreviewXFF(loXFF)
+	loPreview.show(1)
+ENDIF
+
+DEFINE CLASS SampleExtensionHandler as Custom
+
+	oPreviewContainer = null
+
+	PROCEDURE ToolbarOnInit
+	LPARAMETERS toToolbar
+	LOCAL button
+	IF toToolbar.AddObject("mybutton", "commandbutton")
+		BINDEVENT(toToolbar.mybutton, "click" , this, "ButtonClicked")		
+		toToolbar.mybutton.tabindex = 1
+		toToolbar.mybutton.Visible = .t.
+		IF UPPER(totoolbar.BaseClass)!="TOOLBAR"
+			toToolbar.mybutton.left = toToolbar.cmdQuit.left
+			toToolbar.cmdQuit.left = toToolbar.mybutton.left + toToolbar.mybutton.width
+		ENDIF		
+	endif
+
+	PROCEDURE ButtonClicked
+	LOCAL lcString
+	lcString = "this.oPreviewContainer.Name: "+this.oPreviewContainer.Name+CHR(13)
+	lcString = lcString + "current page: "+TRANSFORM(this.oPreviewContainer.nPageNo)+CHR(13)
+	lcString = lcString + "XFRX#DRAW Object: "+this.oPreviewContainer.oXFRXWriter.Name+CHR(13)
+	lcString = lcString + "Page count: "+TRANSFORM(this.oPreviewContainer.oXFRXWriter.PageCount)+CHR(13)
+	WAIT WINDOW lcString
+*	
+*	this.oPreviewContainer.oXFRXWriter.PrintDocument(...)
+*	this.oPreviewContainer.oXFRXWriter.SavePicture(...)
+ENDDEFINE
+
+                        </pre>
+                        </div>                
+                </li>
+				</UL>
+			</li>
+							
+				
+		</ul>
+		<H3>Bugs fixed</H3>
+		<UL type="disc">
+			<li>"SET NULL ON" problem has been fixed
+			<li>A problem with previewer crashing on Windows Vista has been fixed
+			<li>Dynamic background is now supported in VFP 9			
+		</ul>
+		<hr width="75%">
+
+		<!--
+		-- Release notes version 12.5 + 12.4 -- begin --
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 12.5 + 12.4, Release notes</H2>
+		<p class="Section1">
+		Version 12.5 released on:&nbsp;31&nbsp;January 2008
+		<br>
+		Version 12.4 released on:&nbsp;14&nbsp;November 2007</p>
+		<H3>New features / Updates</H3>
+		<UL type="disc">
+			<LI>
+				<B>VFP 9.0 SP2 features are now supported</B>
+				<p>
+				This version supports both VFP 9.0 SP2 and VFP 9.0 pre-SP2 environments. In SP2 it supports the new dynamics and rotation features. 
+				<p>
+			<LI>
+				<B>GDI+ compatible word wrapping algorithm</B><br/><br/>
+				The new version comes with an alternate GDI+ wordwrapping algorithm. Since the introduction of VFP 9.0 we are experiencing layout compatibility issues between the
+				old reporting engine (pre-VFP 9.0) and the new reporting engine (VFP 9.0). <i>[Please see <b>Guide to Reporting Improvements</b> VFP 9.0 help topic for more information.]</i>
+				<p>
+				With XFRX we are experiencing a similar problem - while the pre-VFP 9.0 report engine inside XFRX is using GDI for wordwrapping and layout calculation, the VFP 9.0 
+				report that is used in XFRX for VFP 9.0 is using GDI+. Moreover, XFRX is using GDI+ for printing, output to pictures and previewing. 
+				The main difference between using GDI and GDI+ is text width. Each text element is slightly wider with GDI+, which can result in element content being cut, earlier wrapping
+				longer stretched fields. Here is a summary:
+<p>
+				<table class="tbl" cellspacing="2" cellpadding="2">
+				<tr>
+				<td colspan="3" class="hdr">XFRX ver. 12.3 and earlier</td>
+				</tr>
+				<tr>
+				<td></td><td class="fst">&nbsp; &nbsp;VFP 9.0&nbsp; &nbsp;</td><td class="fst">VFP 8.0 and earlier</td>
+				</tr>
+				<tr>
+				<td class="fst">Output to PDF and other output formats</td><td>GDI</td><td>GDI</td>
+				</tr>
+				<tr>
+				<td class="fst">Report engine</td><td>GDI+</td><td>GDI</td>
+				</tr>
+				<tr>
+				<td class="fst">Report previewer</td><td>GDI+</td><td>GDI+</td>
+				</tr>
+				<tr>
+				<td class="fst">Printing out of XFRX</td><td>GDI+</td><td>GDI+</td>
+				</tr>
+				</table>
+				<P>
+				Although converting everything to GDI+ would ease the complexity, it would bring another problem - "old" reports might need to be modified.
+				So, instead, the latest XFRX version now contains both GDI and GDI+ wordwrapping algorithms and you can choose which one is going to be used. By default GDI+ is used 
+				in VFP 9.0 in the listener mode and GDI is used in VFP 8.0 earlier. There is probably no reason to switch to GDI in VFP 9.0 but it might sometimes be useful to switch
+				to GDI+ as printing and previewing is still in GDI+:
+				<p>
+				<table class="tbl" cellspacing="2" cellpadding="2">
+				<tr>
+				<td colspan="3" class="hdr">XFRX ver. 12.4 with wordwrapping set to GDI+</td>
+				</tr>
+				<tr>
+				<td></td><td class="fst">&nbsp; &nbsp;VFP 9.0&nbsp; &nbsp;</td><td class="fst">VFP 8.0 and earlier</td>
+				</tr>
+				<tr>
+				<td class="fst">Output to PDF and other output formats</td><td>GDI+</td><td>GDI+</td>
+				</tr>
+				<tr>
+				<td class="fst">Report engine</td><td>GDI+</td><td>GDI+</td>
+				</tr>
+				<tr>
+				<td class="fst">Report previewer</td><td>GDI+</td><td>GDI+</td>
+				</tr>
+				<tr>
+				<td class="fst">Printing out of XFRX</td><td>GDI+</td><td>GDI+</td>
+				</tr>
+				</table>
+<p>
+				<table class="tbl" cellspacing="2" cellpadding="2">
+				<tr>
+				<td colspan="3" class="hdr">XFRX ver. 12.4 with wordwrapping set to GDI</td>
+				</tr>
+				<tr>
+				<td></td><td class="fst">&nbsp; &nbsp;VFP 9.0&nbsp; &nbsp;</td><td class="fst">VFP 8.0 and earlier</td>
+				</tr>
+				<tr>
+				<td class="fst">Output to PDF and other output formats</td><td>GDI</td><td>GDI</td>
+				</tr>
+				<tr>
+				<td class="fst">Report engine</td><td>GDI+</td><td>GDI</td>
+				</tr>
+				<tr>
+				<td class="fst">Report previewer</td><td>GDI+</td><td>GDI+</td>
+				</tr>
+				<tr>
+				<td class="fst">Printing out of XFRX</td><td>GDI+</td><td>GDI+</td>
+				</tr>
+				</table>
+				<p>
+				To set the wordwrapping algorithm manually then, before running your reports, create a public or private variable _xfrx_WordWrapAlgorithm and set it to 1 for GDI mode 
+				and 2 for GDI+ mode.
+				<p>
+				
+			<LI>
+			
+				<B>E-mail support in the XFRX previewer</B>
+				<p>
+				An email icon has been added to the XFRX previewer toolbar. It is disabled by default for backward compatibility and can be enabled by setting the iEmail property of the 
+				previewer class [xfCont, cntXFRXMultiPage or frmMPPreviewer] to 1. 
+				If you click the email icon, it runs the Email method of the xfCont class. By default it displays a simple dialog box asking for email address, subject, body, etc. and 
+				uses VFPWinsock library to send the email.
+				<div style="border:solid 1px gray;margin:8px;margin-left:15px;padding:4px;"><b>Note:</b> VFPWinsock is a free SMTP sendmail library written by a VFP MVP Francis Faure. It is not distributed together with XFRX and it can be downloaded from 
+						<a href="http://www.xfrx.net/vfpWinsock/index_e.asp">http://www.xfrx.net/vfpWinsock/index_e.asp</a>. It is a nice little package written in VFP distributed as a single .prg.
+				</div>
+				The default behavior can be intercepted or overridden by an extension handler [<i>Please find more information about extension handlers in the Developer's Guide here:</i>] - and, as the default dialog does not ask for all information VFPWinsock needs (eg. it does not ask
+				for SMTP host) you actually need to create an extension handler to make it work in your environment. There are two events that extension handler can implement:
+				<ul>
+						<li>Email - the event is fired when the icon is clicked, before the dialog is displayed. XFF file reference is sent as the 1st parameter. Returning .F. will
+						suppress the default behavior.
+						</li>
+
+						<li>EmailOptions - this event is fired after the dialog is displayed and user clicked "Send". XFF file reference and options object is sent as a parameter. Returning
+						.F. will suppress the email to be sent
+						<p>
+						The parameter object has the following properties:
+						<ul>
+								<li>cTo 
+								<li>cCC
+								<li>cBCC
+								<li>cSubject
+								<li>cAttachmentName
+								<li>cBody
+						</ul>
+						</li>
+				</ul>
+				<p>
+				Following are sample of the two most common scenarios:
+				<ul>
+						<li><b>Suppress the default behavior and handle the email event on your own</b>
+						<div style="margin:4px;padding:4px;border:solid 1px gray;">
+						<pre>
+loPreview = CREATEOBJECT("frmMPPreviewer")
+loPreview.iEmail = 1 && show the email icon
+loPreview.oExtensionHandler = CREATEOBJECT("SampleExtensionHandler")
+loPreview.PreviewXFF(loXFF) && preview the document 
+loPreview.show(1)
+
+DEFINE CLASS SampleExtensionHandler as Custom
+
+PROCEDURE Email
+LPARAMETERS  loXFF
+LOCAL loSession, lcFileName
+loSession=EVALUATE([xfrx("XFRX#INIT")])
+lcFileName = Addbs(Sys(2023))+"test.pdf" && temporary file name
+If loSession.SetParams(lcFileName,,.T.,,,,"PDF") = 0 && the 3rd parameter says we do not want to preview the PDF
+	loSession.TransformReport(loXFF)
+	
+	LOCAL sm
+	Set Procedure To vfpwinsock ADDITIVE 
+	sm = Createobject("vfp_winsock_send_mail")
+	sm.smtp_host = "your.smtp.server.here" &&&<<<<<<<<<<<<<<<<<<<< put your smtp server here
+	sm.From = "eqeus@eqeus.com" 
+	sm.To = "eqeus@eqeus.com"
+	sm.subject = "Email test"
+	sm.silence = .T.
+	sm.attaCHMENT = lcFileName
+	if !sm.Send()
+		MESSAGEBOX(sm.erreur,16,"xfrx test")
+	ELSE
+		MESSAGEBOX("Message was sent",0,"xfrx test")
+		ERASE (lcFileName)
+	endif
+
+Endif
+
+RETURN .F.
+ENDPROC
+
+ENDDEFINE
+</pre></div>
+						<li><b>Use the default dialog box, use an extension handler to supply mail server parameters and let XFRX send the email</b>
+						<div style="margin:4px;padding:4px;border:solid 1px gray;">
+						<pre>
+DEFINE CLASS SampleExtensionHandler as Custom
+
+PROCEDURE EmailOptions
+LPARAMETERS  loXFF, loOptions
+loOptions.cSMTP_HOST = "mail.your_domain.com"
+loOptions.cFrom = "eqeus@eqeus.com"
+ENDPROC
+
+ENDDEFINE
+</pre></div>
+				</ul>
+				
+				
+		</ul>
+		<H3>Bugs fixed</H3>
+		<UL type="disc">
+			<li>Landscape printing has been improved, both clockwise and anti-clickwise rotation is now supported
+			<li>Landscape reports printing as portrait in Word has been fixed
+			<li>The 10000 lines limit in XLS output has been removed
+			<li>Picture shift problem in XLS has been fixed
+		</ul>
+		<hr width="75%">
+
+		<!--
+		-- Release notes version 12.3 -- begin --
+		--
+		-->
+		<H2 class="Section1">
+			XFRX version 12.3, Release notes</H2>
+		<p class="Section1"><span>Release date:&nbsp;27&nbsp;August 2007</span></p>
+		<div style="BORDER-RIGHT: red 2px solid; PADDING-RIGHT: 8px; BORDER-TOP: red 2px solid; PADDING-LEFT: 8px; PADDING-BOTTOM: 8px; BORDER-LEFT: red 2px solid; PADDING-TOP: 8px; BORDER-BOTTOM: red 2px solid">
+			<B>Important installation notes for 12.x versions</B>
+			<UL>
+				<LI>
+					<FONT size="2">The XFRX previewer component requires <STRONG>FOXTOOLS.FLL</STRONG> library 
+						if used in VFP 6.0.</FONT>
+				<LI>
+					<STRONG>XFRXLIB.FLL </STRONG>now also requires <STRONG>MSVCP71.DLL</STRONG> library 
+					to be installed (the previous version required <STRONG>GDIPLUS.DLL </STRONG>and <STRONG>
+						MSVCR71.DLL</STRONG> libraries), all three libraries are required now</LI></UL>
+		</div>
+		<H3>New features / Updates</H3>
+		<UL type="disc">
+			<LI>
+				<B>New output type - XPS</B><br/><br/>
+				The XPS [XML Paper Specification] is a new document specification developed by Microsoft. You can find more information about XPS at:
+				<ul>
+				<li> <a href="http://www.microsoft.com/whdc/xps/default.mspx">http://www.microsoft.com/whdc/xps/default.mspx</a>
+				<li> <a href="http://en.wikipedia.org/wiki/XML_Paper_Specification">http://en.wikipedia.org/wiki/XML_Paper_Specification</a>
+				</ul>
+				There are no special requirements regarding the platform setup – especially .NET framework is not required. XFRX generates the document on its own 
+				from scratch so all you need is VFP and XFRX.
+				<p>
+				To be able to preview the XPS document, you need an XPS document viewer. If you are running Windows Vista you already have one as it is included with .NET 
+				Framework 3.0. For Windows XP and Windows Server 2003 you can download the viewer
+				from <a href="http://www.microsoft.com/whdc/xps/viewxps.mspx">http://www.microsoft.com/whdc/xps/viewxps.mspx</a>.
+		</ul>
+		<H3>Bugs fixed</H3>
+		<UL type="disc">
+			<li>Speedup - the XFF file processing and PDF generation should be around 10-20% faster
+			<li>"Money" type was not properly handled in some scenarios
+			<li>Printing multiple pages per sheet was not working correctly for the "letter" size papers 
+			<li>Horizontal and vertical lines were not properly rendered in page footer for flow layout output types (FDOC, FRTF)
+			<li>A bug causing slowdown when exporting to PDF was fixed
+			<li>PAGETOTAL variable was not correctly evaluated when merging multiple reports
+			<li>A combination of a specific font, "stretch" flag and a textbox height could cause an occasional blank line inclusion
+			<li>Appending to PDF - PDF files with a specific format were not correctly supported
+			<li>Printing - layout problems with landscape reports have been fixed
+			<li>VFP 8 engine - objects on bands wrapped to a new page occasionally got a wrong z-index 
+			<li>VFP 9 engine
+			<ul><li>Cancelling a report was producing an empty document. No whatever was processed till the user cancelled the report is generated in the document.
+				<li>Exporting landscape reports to Word produced a document that appeared as portrait when printed
+				<li>AdjustObjectSize event is now properly propagated to listener's successors
+			</ul>
+			<li>XFRX previewer
+			<ul><li>Navigation using searched keywords was not working correctly when SET EXACT was set to ON
+				<li>Various tweaks were done to improve the user interface
+			</ul>
+		</ul>
+		<hr width="75%">
+		<!--
+		--
+		-- Release notes version 12.2 -- begin --
+		--
+		-->
+		<H2 class="Section1">
+			XFRX version 12.2, Release notes</H2>
+		<p class="Section1"><span>Release date:&nbsp;5&nbsp;December 2006</span></p>
+		<div style="BORDER-RIGHT: red 2px solid; PADDING-RIGHT: 8px; BORDER-TOP: red 2px solid; PADDING-LEFT: 8px; PADDING-BOTTOM: 8px; BORDER-LEFT: red 2px solid; PADDING-TOP: 8px; BORDER-BOTTOM: red 2px solid">
+			<B>Important installation notes for 12.x versions</B>
+			<UL>
+				<LI>
+					<FONT size="2">The XFRX previewer component requires <STRONG>FOXTOOLS.FLL</STRONG> library 
+						if used in VFP 6.0.</FONT>
+				<LI>
+					<STRONG>XFRXLIB.FLL </STRONG>now also requires <STRONG>MSVCP71.DLL</STRONG> library 
+					to be installed (the previous version required <STRONG>GDIPLUS.DLL </STRONG>and <STRONG>
+						MSVCR71.DLL</STRONG> libraries), all three libraries are required now</LI></UL>
+		</div>
+		<H3>New features / Updates</H3>
+		<UL type="disc">
+			<LI>
+				<B>XFRX Advanced Previewer</B>
+				<ul>
+					<li>
+						Printer selection dialog enhanced
+						<br>
+						The dialog contains new controls allowing for the following options:
+						<ul>
+							<li>
+							The number of copies to print
+							<li>
+							Include odd / even or all pages
+							<li>
+								Zoom - printing multiple pages per sheet</li>
+						</ul>
+					<li>
+						Export dialog enhanced<br>
+						The dialog allows for the following new features:
+						<ul>
+							<li>
+							Specify the export output targets that would be available for selection
+							<li>
+								When exporting to "Image" output formats, the following new options are 
+								available:
+								<ul>
+									<li>
+									The number of copies to print
+									<li>
+									Include odd / even or all pages
+									<li>
+									Zoom - printing multiple pages per sheet
+									<li>
+										The DPI of the image created</li>
+								</ul>
+							</li>
+						</ul>
+					<li>
+						Previewer extension handler
+						<br>
+						The extension handler now supports two new events (PrintOptions and 
+						ExportOptions) - print and export events after the options dialog is selected 
+						and the user clicks [Ok]. The events receive two parameters - the XFF object 
+						reference and an object containing the parameters user selected.
+						<br>
+						<br>
+						<div id="Div3" style="BORDER-RIGHT: thin solid; PADDING-RIGHT: 3px; BORDER-TOP: thin solid; PADDING-LEFT: 3px; PADDING-BOTTOM: 2px; BORDER-LEFT: thin solid; WIDTH: 100%; PADDING-TOP: 2px; BORDER-BOTTOM: thin solid; FONT-FAMILY: 'Courier New', Monospace; POSITION: static"
+							onclick="return DIV1_onclick()"><FONT face="Verdana"><STRONG>Example:</STRONG> Defining 
+								the export output options list, intercepting the XLS export</FONT>
+							<br>
+							<pre>&nbsp;
+
+				</pre>
+							<PRE>USE invoices ORDER customer
+LOCAL loSession, lnRetval, loXFF, loPreview, loScripts
+loSession=EVALUATE([xfrx("XFRX#LISTENER")])
+lnRetVal = loSession.SetParams("",,,,,,"XFF") &amp;&amp; no name = just in memory
+If lnRetVal = 0
+	REPORT FORM invoices OBJECT loSession		
+	loXFF = loSession.oxfDocument
+<FONT color=#009933>	*
+	* initialize the previewer 
+	*</FONT>
+	SET CLASSLIB TO xfrxlib ADDITIVE 
+	loPreview = CREATEOBJECT("frmMPPreviewer")
+	loPreview.setExtensionHandler(CREATEOBJECT("MyExtensionHandler"))
+	loPreview.windowType = 0
+	loPreview.iBook = 0
+	loPreview.PreviewXFF(loXFF)
+	loPreview.show(1)
+ENDIF
+
+
+DEFINE CLASS MyExtensionHandler AS Custom
+
+  PROCEDURE Export
+    LPARAMETERS toXFF
+	IF USED("_xfExportTypes")
+		USE IN _xfExportTypes
+	ENDIF
+<FONT color=#339966>	*
+	* define my export options list
+	*</FONT>
+	CREATE CURSOR _xfExportTypes (name C(50), extension C(4), targetCode C(10))
+	INSERT INTO _xfExportTypes VALUES ("HTML",	"html",	"HTML")
+	INSERT INTO _xfExportTypes VALUES ("PDF",	"pdf",	"PDF")
+	INSERT INTO _xfExportTypes VALUES ("Excel",	"xls",	"XLS")
+  ENDPROC
+ 
+  PROCEDURE ExportOptions
+    LPARAMETERS toXFF, toOptions
+	IF toOptions.cTarget = "XLS"
+<FONT color=#339966>		*
+		* my own code to handle output to Excel
+		*</FONT>
+		=MESSAGEBOX("exporting to "+toOptions.cOutputFile)
+		RETURN .F.   <FONT color=#339966>&amp;&amp; suppress the default behavior
+</FONT>	eLSE
+		RETURN .T.   <FONT color=#339966>&amp;&amp; continue with the default behavior
+</FONT>	ENDIF
+
+  ENDPROC
+ENDDEFINE
+</PRE>
+						</div>
+					</li>
+				</ul>
+				<br>
+			<LI>
+				<B>Printing and exporting to pictures</B>
+				<br>
+				The SavePicture and PrintDocument methods now have new parameters for 
+				controlling whether to include all pages, odd or even only, the number of 
+				copies and the number of pages per sheet.
+				<ul>
+				</ul>
+			</LI>
+		</UL>
+		<H3>Bugs fixed</H3>
+		<UL type="disc">
+			<li>
+			frmMPPreviewer class was missing the iBook property
+			<li>
+			Private data session reports were causing crashes in previewer (VFP 9)
+			<li>
+			Opaque colored backgrounds were not printing properly
+			<li>
+			The report previewer wasn't sending the XFF file reference parameter to the 
+			extension hander events
+			<LI>
+			Displaying multiple pages at once in the previewer was not working correctly 
+			(old pages being left on the screen)&nbsp;if there were not enough pages 
+			remaining in the document
+			<li>
+			XFRX was producing corrupted PDFs when fonts were included in the document 
+			(error 135)
+			<li>
+			Appending to PDF was improved (more PDF document "subformats" are now 
+			supported)
+			<li>
+			Wrapped lines were dropped in the previewer (in some scenarios)
+			<LI>
+			OpenOffice - the absolute layout output was not working correctly (blank 
+			textboxes)&nbsp;with the latest OpenOffice version
+			<LI>
+			The word wrapping algorithm was not respecting the current code page - Cyrillic 
+			texts having lines too wide
+			<LI>
+			VFP 8 engine - vertical lines are now properly wrapped to a new page 
+			when&nbsp;stretched bands wrap
+			<LI>
+				If the page range is not specified for SavePicture and PrintDocument method, 
+				the whole document is exported/printed</LI></UL>
+		<P>&nbsp;</P>
+		<hr width="75%">
+		<!--
+		--
+		-- Release notes version 12.1 -- begin --
+		--
+		-->
+		<H2 class="Section1">
+			XFRX version 12.1, Release notes</H2>
+		<p class="Section1"><span>Release date:&nbsp;5&nbsp;September 2006</span></p>
+		<div style="BORDER-RIGHT: red 2px solid; PADDING-RIGHT: 8px; BORDER-TOP: red 2px solid; PADDING-LEFT: 8px; PADDING-BOTTOM: 8px; BORDER-LEFT: red 2px solid; PADDING-TOP: 8px; BORDER-BOTTOM: red 2px solid">
+			<B>Important installation notes</B>
+			<UL>
+				<LI>
+					<FONT size="2">The XFRX previewer component requires <STRONG>FOXTOOLS.FLL</STRONG> library 
+						if used in VFP 6.0.</FONT>
+				<LI>
+					<STRONG>XFRXLIB.FLL </STRONG>now also requires <STRONG>MSVCP71.DLL</STRONG> library 
+					to be installed (the previous version required <STRONG>GDIPLUS.DLL </STRONG>and <STRONG>
+						MSVCR71.DLL</STRONG> libraries), all three libraries are required now</LI></UL>
+		</div>
+		<H3>New features / Updates</H3>
+		<UL type="disc">
+			<LI>
+				<B>XFRX Advanced Previewer</B>
+				<br>
+				<br>
+				<UL type="square">
+					<li>
+						<b>The previewer is now able to preview multiple pages at once</b><br>
+						A new selection control on the toolbar can now switch the previewer to display 
+						up to 8 pages at the same time<br>
+					<li>
+						<b>Displaying progress bar</b> &nbsp;<br>
+						A progress bar object reference can be sent to the previewer to show progress 
+						when exporting to PDF and other output formats&nbsp;<br>
+						<br>
+						<div id="Div2" style="BORDER-RIGHT: thin solid; PADDING-RIGHT: 3px; BORDER-TOP: thin solid; PADDING-LEFT: 3px; PADDING-BOTTOM: 2px; BORDER-LEFT: thin solid; WIDTH: 100%; PADDING-TOP: 2px; BORDER-BOTTOM: thin solid; FONT-FAMILY: 'Courier New', Monospace; POSITION: static"
+							onclick="return DIV1_onclick()">
+							Example:<br>
+							<br>
+							loXFF = XFRX("XFRX#DRAW")<br>
+							loXFF.openDocument("output.xff")<br>
+							loProgress = createobject("progress")
+							<span style="COLOR: #009933">&amp;&amp; this is
+                            a progress object that will be passed to the previewer
+                            <br>
+                        </span>loPreview = CREATEOBJECT("frmMPPreviewer")
+							<br>
+							loPreview.oProgress = loProgress &amp;&amp; set the reference
+							<br>
+							loPreview.previewXFF(loXFF, "XFRX sample",1,"XFRX Sample Job name")
+							<span style="COLOR: #336633">
+								<span style="COLOR: #009933">&amp;&amp; you can now also specify the printer job name
+                            </span>
+								<br>
+							</span>loPreview.show(1)<br>
+							<br>
+							define class progress as custom
+							<br>
+							&nbsp; procedure updateProgress
+							<br>
+							&nbsp; &nbsp; lpara tnReport,tnPage,tnPercentage
+							<br>
+							&nbsp; &nbsp; wait window nowait "Exporting page: "+allt(str(tnPage))+" (Press 
+							Ctrl+Q to Cancel)"
+							<br>
+							&nbsp; endproc<br>
+							enddef</div>
+						<br>
+					<li>
+						<B>Exporting from the previewer can be cancelled by user action<br>
+						</B>The TransformReport method now reacts to the gnStopXFRX public variable 
+						change so that the export in progress can be cancelled<br>
+						<br>
+						<div id="DIV1" style="BORDER-RIGHT: thin solid; PADDING-RIGHT: 3px; BORDER-TOP: thin solid; PADDING-LEFT: 3px; PADDING-BOTTOM: 2px; BORDER-LEFT: thin solid; WIDTH: 100%; PADDING-TOP: 2px; BORDER-BOTTOM: thin solid; FONT-FAMILY: 'Courier New', Monospace; POSITION: static"
+							onclick="return DIV1_onclick()">
+							Example:<br>
+							<br>
+							PUBLIC gnStopXFRX<br>
+							ON KEY LABEL CTRL+Q gnStopXFRX = 1
+							<span style="COLOR: #006633">&amp;&amp; the subsequent
+                                report exporting can be cancelled by&nbsp;<br>
+                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&amp;&amp; pressing CTRL+Q</span><br>
+						</div>
+						<br>
+					<li>
+						<b>Print job name can be specified for each previewing document</b><br>
+						A new (4th, optional) parameter of the PreviewXFF method specifies the printer 
+						job name. If the 4th parameter is empty, the 2nd parameter (report caption) is 
+						used as the printer job name. If both 2nd and 4th parameters are empty, the 
+						default printer job name "XFRX" is used.</li></UL>
+			</LI>
+		</UL>
+		<H3>Bugs fixed</H3>
+		<UL type="disc">
+			<li>
+			Bookmarks were not exporting to PDF<li>
+			OpenOffice output didn't work correctly with SET EXACT flag set to ON<li>
+			Memory leak problem in XFRXLIB.FLL was fixed<LI>
+			RightClick and MouseWheel events are now properly handled in the XFRX previewer<LI>Flow 
+				layout options - bands wrapping on a new page were incorrectly rendered as page 
+				headers<br>
+				<br>
+			</LI>
+		</UL>
+		<hr width="75%">
+		<!--
+		--
+		-- Release notes version 12.0 -- begin --
+		--
+		-->
+		<H2 class="Section1">
+			XFRX version 12.0, Release notes</H2>
+		<p class="Section1"><span>Release date:&nbsp;17&nbsp;August 2006</span></p>
+		<p><b>Installation notes:</b>
+			<br>
+		</p>
+		<UL>
+			<LI>
+				<FONT size="2">The XFRX previewer component requires <STRONG>FOXTOOLS.FLL</STRONG> library 
+					if used in VFP 6.0.</FONT>
+			<LI>
+				<STRONG>XFRXLIB.FLL </STRONG>now also requires <STRONG>MSVCP71.DLL</STRONG> library 
+				to be installed (the previous version required <STRONG>GDIPLUS.DLL </STRONG>and <STRONG>
+					MSVCR71.DLL</STRONG> libraries)</LI></UL>
+		<P></P>
+		<H3>New features / Updates</H3>
+		<UL type="disc">
+			<LI>
+				<B>New output types</B><br>
+				<br>
+				<UL>
+					<LI>
+						<STRONG>Flow layout Open Office Writer document&nbsp;(FODT)</STRONG>
+					<LI>
+						<STRONG>Absolute layout Open Office Calc Spreadsheet (ODS)</STRONG>
+					<LI>
+						<STRONG>Flow layout Open Office Calc Spreadsheet (FODS)</STRONG></LI>
+				</UL>
+				<BR>
+				<P class="MsoNormal"><SPAN lang="EN-US">Since 12.0, the Writer and Calc outputs 
+  are supported, both of which can be generated either using the absolute or 
+  flow layout format (please see chapter "Flow layout document option" in the 
+  Developer's guide </SPAN><SPAN lang="EN-US">for more information about the flow 
+  layout options). <BR><BR></P>
+				<P class="MsoNormal"><SPAN lang="EN-US">To generate the OpenOffice document, use 
+  the following codes as the 7<SUP>th</SUP> parameter (targetType) of the 
+  SetParams method:
+</SPAN></P>
+				<P class="MsoNormal">
+					<TABLE id="Table1" cellSpacing="4" cellPadding="4" border="1">
+						<TR>
+							<TD vAlign="top" bgcolor="gray">
+								<P><B>Document type</B></P>
+							</TD>
+							<TD vAlign="top" bgcolor="gray">
+								<P><b>targetType</b></P>
+							</TD>
+						</TR>
+						<TR>
+							<TD vAlign="top">
+								<P>OpenOffice Writer document with absolute layout</P>
+							</TD>
+							<TD vAlign="top">
+								<P>ODT</P>
+							</TD>
+						</TR>
+						<TR>
+							<TD vAlign="top">
+								<P>OpenOffice Writer document with flow layout</P>
+							</TD>
+							<TD vAlign="top">
+								<P>FODT</P>
+							</TD>
+						</TR>
+						<TR>
+							<TD vAlign="top">
+								<P>OpenOffice Calc spreadsheet with absolute layout</P>
+							</TD>
+							<TD vAlign="top">
+								<P>ODS</P>
+							</TD>
+						</TR>
+						<TR style="mso-yfti-irow: 4; mso-yfti-lastrow: yes">
+							<TD vAlign="top">
+								<P class="MsoNormal"><SPAN lang="EN-US">OpenOffice Calc spreadsheet with 
+        flow layout
+<o:p></o:p></SPAN></P>
+							</TD>
+							<TD vAlign="top">
+								<P class="MsoNormal"><SPAN lang="EN-US">FODS
+<o:p></o:p></SPAN></P>
+							</TD>
+						</TR>
+					</TABLE>
+					<BR>
+					<o:p></o:p></P>
+			<LI>
+				<B>XFRX Advanced Previewer</B>
+				<br>
+				<br>
+				The displaying component was completely reworked, result of which is:
+				<br>
+				<br>
+				<UL type="square">
+					<li>
+						<b>Significant speed increase</b><br>
+					The previewer is now about 50 times faster in displaying the page content and 
+					moving from one page to another
+					<li>
+						<b>Unicode support</b><br>
+					The previewer now supports Chinese and Japanese code pages, correctly displays 
+					Hebrew and Arabic and supports multiple code pages within single report (new 
+					feature in VFP 9)
+					<li>
+						<b>Better rendering</b><br>
+					As the XFRX previewer in previous version was using GDI, text with small font 
+					sizes was displayed slightly wider, which was causing various layout 
+					discrepancies. These problems are now gone as the new previewer is using GDI+.
+					<LI>
+						<B>Rotated text</B><br>
+					Rotated labels and fields are now supported in the previewer
+					<li>
+						<b>Searching</b><br>
+						Searching in the previewer is now significantly faster. The whole document is 
+						searched, all found occurences are listed in a side panel (as 
+						hyperlinks/bookmarks).</li></UL>
+				<br>
+			<li>
+				<b>PDF Output</b>
+				<br>
+				<br>
+				Unicode is now supported in the PDF output type. This allows for converting of 
+				multi-byte code pages (Chinese, Japanese) as well as supporting multiple code 
+				pages withing one report / document.&nbsp;<BR>
+				The unicode samples can be downloaded from: <a href="http://www.eqeus.com/files/xfrx12_demos.zip">
+					http://www.eqeus.com/files/xfrx12_demos.zip</a>
+				<p></p>
+			<li>
+				<b>Printing and export to pictures</b>
+				<br>
+				<br>
+				<ul>
+					<li>
+					These output types now also support unicode and multiple character sets.
+					<li>
+						When exporting to pictures, the 7th and 8th parameters can specify a DPI or a 
+						zoom factor&nbsp;of the picture&nbsp;
+						<p>Example:
+							<pre>loXFF.SavePicture("output.bmp","BMP",1,1,24,,"DPI",300) &amp;&amp; saves the picture as 300 DPI
+loXFF.SavePicture("output.bmp","BMP",1,1,24,,"ZOOM",150) &amp;&amp; zoom to 150%
+						</pre>
+					</li>
+				</ul>
+			</li>
+		</UL>
+		<H3>Bugs fixed</H3>
+		<UL type="disc">
+			<li>
+			Occasionally, pictures stored in relative paths to the FRX file locations were 
+			not correctly displayed.
+			<li>
+			Font subset embedding didn't work correctly with true type fonts with short 
+			"loca" table adressing.
+			<li>
+			Occasional crashing when converting reports to pictures.
+			<LI>
+			If the datasession Init method returned .F., the report was not properly 
+			cancelled.
+			<LI>
+			Pictures with zero height or width&nbsp;were causing a corrupted PDF
+			<LI>
+			When PictureDPI property was set, "stretch picture, retain shape" wasn't 
+			working correctly in PDF
+			<LI>
+				The layout of printing / previewing / generating pictures was improved - 
+				"cleaner" lines, proper handling of transparent / invisible rectangles</LI>
+		</UL>
+		<P>&nbsp;</P>
+		<hr width="75%">
+		<!--
+		--
+		-- Release notes version 11.3 -- begin --
+		--
+		-->
+		<H2 class="Section1">XFRX version 11.3, Release notes</H2>
+		<p class="Section1"><span>Release 
+date:&nbsp;14 March 2006</span></p>
+		<H3>New features / Updates</H3>
+		<UL type="disc">
+			<LI>
+				<STRONG>XFRX Advanced Previewer</STRONG>
+				<BR>
+				<BR>
+				<UL>
+					<LI>
+						<STRONG>Tabbed&nbsp;interface</STRONG><BR>
+						The advanced previewer can now preview multiple documents using the popular 
+						tabbed interface approach.<BR>
+					<LI>
+						<STRONG>Custom event hyperlinks (drill-down)</STRONG><BR>
+						<P class="MsoNormal" style="TEXT-JUSTIFY: inter-ideograph; TEXT-ALIGN: justify"><SPAN lang="EN-US">XFRX now 
+    recognizes two types of hyperlinks: <o:p></o:p></SPAN></P>
+						<UL style="MARGIN-TOP: 0in" type="disc">
+							<LI class="MsoNormal" style="TEXT-JUSTIFY: inter-ideograph; TEXT-ALIGN: justify; mso-list: l0 level1 lfo1; tab-stops: list .5in">
+								<SPAN lang="EN-US">“normal” 
+      hyperlinks (printed in <U>
+										<SPAN style="COLOR: blue">blue</SPAN></U>), which navigate to other places in 
+      the report or to an external web address </SPAN><SPAN lang="EN-US">and <o:p></o:p></SPAN>
+							<LI class="MsoNormal" style="TEXT-JUSTIFY: inter-ideograph; TEXT-ALIGN: justify; mso-list: l0 level1 lfo1; tab-stops: list .5in">
+								<SPAN lang="EN-US">“custom event” 
+      hyperlinks (printed in <U>
+										<SPAN style="COLOR: green">green</SPAN></U>), where XFRX allows for assigning a 
+      custom VFP code that will be called when users click the hyperlink. <o:p></o:p></SPAN></LI></UL>
+						<P class="MsoNormal" style="TEXT-JUSTIFY: inter-ideograph; TEXT-ALIGN: justify"><SPAN lang="EN-US">This “custom 
+    event” hyperlink feature can be used to invoke application specific actions 
+    (information forms, custom processes, etc.) or for implementing <STRONG>drill-down functionality</STRONG> – invoking detailed 
+    report where the field user clicked on is taken as a parameter for the 
+    report (for example, clicking a customer name in the report listing all 
+    customers can run a report with detail information about this specific 
+    customer). The new report can be directed to a new page of a multipage 
+    previewer, which could provide a comfortable environment for “drilling down” 
+    specific information – with the ability to go back to the original report 
+    without closing the current one, side by side report comparison, exporting / 
+    printing selected reports, etc.<BR><BR>Please find more information about this feature as well 
+    as a step-by-step example in the Developer's guide, <EM>"Implementing custom event hyperlinks (drilldown) in 
+									XFRX previewer"</EM> chapter.</SPAN></P>
+					<LI>
+						<STRONG>Fake toolbar option<BR>
+						</STRONG>The previewer can now optionally replace the default toolbar with a 
+						toolbar-like control placed above the previewer control. This option can be 
+						very useful if the previewer form is not inside the main VFP screen.<BR>
+					<LI>
+						<STRONG>New&nbsp;toolbar icon - "Export"</STRONG><BR>
+						If&nbsp;the user clicks at the new Export icon, a dialog with&nbsp;the output 
+						type and the file name selection is displayed and the output document is 
+						generated based on options selected.
+						<BR>
+					<LI>
+						<STRONG>Previewer extension handler</STRONG><br>
+						The extension handler allows for extending the functionality of the basic 
+						classes without need of creating subclasses. All you need is to create a custom 
+						class, which implements certain methods. The custom class is registered with 
+						the XFRX previewer class (using SetExtensionHandler method) and the previewer 
+						calls the extension methods on appropriate events.
+						<BR>
+					<LI>
+						<STRONG>The previewer instantiation is now significantly simplified</STRONG><BR>
+						A complete standalone-window previewer is now shipped with XFRX - all you need 
+						to do to make it work is to instantiate a class and call one of its methods 
+						with an XFF file to preview as a parameter. Alternatively, you can use the 
+						prepared single document or multiple documents (tabbed interface) controls to 
+						your forms.<BR>
+						<BR>
+						Please find more information about the advanced previewer in the Developer's 
+						guide, "XFRX previewer" chapter.<BR>
+					<LI>
+						German localization is now available<BR>
+					</LI>
+				</UL>
+			<LI>
+				<STRONG>PDF output format</STRONG>
+				<UL>
+					<LI>
+					Hebrew code page (cp 1254) is now supported
+					<LI>
+					Pictures are binary comparised to reduce the size of PDF documents with 
+					repeated pictures
+					<LI>
+						VFP 9: DynamicLineHeight property is used to control if the text field 
+						background color should fill the whole textbox (VFP 9 default behavior) or only 
+						the actual text printed (VFP 8 backward compatibility behavior)<BR>
+					</LI>
+				</UL>
+			<LI>
+				<STRONG>General</STRONG>
+				<UL>
+					<LI>
+					Target image DPI can be specified (large pictures can be downsampled to reduce 
+					the result document size)&nbsp; [see PictureDPI property for XFRXListener and 
+					XFRXSession classes at Developer's guide, "Properties and methods common in 
+					XFRXListener and XFRXSession classes" chapter].
+					<LI>
+						Image quality can be specified for ActiveX objects [see DefaultPictureFormat 
+						property for XFRXListener and XFRXSession classes at Developer's guide, 
+						"Properties and methods common in XFRXListener and XFRXSession classes" 
+						chapter].<BR>
+					</LI>
+				</UL>
+			</LI>
+		</UL>
+		<H3>Bugs fixed</H3>
+		<UL type="disc">
+			<li>
+			Strikethrough font attribute is now correctly recognized
+			<LI>
+			Exporting to image formats was crashing in VFP7.
+			<LI>
+				XFRX Previewer
+				<UL>
+					<LI>
+						SetLanguage method was modifying the actual SELECT area</LI></UL>
+			</LI>
+		</UL>
+		<p>
+			<B>Evaluation package note:</B> The <i>Prevdemo</i> directory with the XFRX 
+			previewer implementation sample has been removed as the same functionality is 
+			now supported by the "native" class <i>frmMPPreviewer</i> of <i>XFRXLib.vcx</i>.</p>
+		<P>&nbsp;</P>
+		<hr width="75%">
+		<!--
+		--
+		-- Release notes version 11.2 -- begin --
+		--
+		-->
+		<DIV></DIV>
+		<h2 class="Section1">XFRX version 11.2, Release notes</h2>
+		<p class="Section1"><span>Release 
+date:&nbsp;6&nbsp;December 2005</span></p>
+		<p></p>
+		<H3><SPAN style="COLOR: black; FONT-FAMILY: Verdana">New features</SPAN></H3>
+		<DIV class="Section1">
+			<UL type="disc">
+				<LI>
+					<FONT face="Verdana" size="2">
+						<P><SPAN><FONT face="Verdana" size="2"><STRONG>OpenOffice Writer document format is now 
+										supported.</STRONG>
+									<BR>
+									OpenOffice is using the OASIS Open Document Format for Office Applications, 
+									which is also supported by a variety of other office applications including 
+									StarOffice, KOffice, and IBM Workplace. XFRX generates the file format 
+									natively, so OpenOffice doesn’t have to be installed on the computer where the 
+									document is generated.
+									<BR>
+									You can find more information about the OASIS Open Document Format at <A href="http://www.oasis-open.org/committees/tc_home.php?wg_abbrev=office">
+										http://www.oasis-open.org/committees/tc_home.php?wg_abbrev=office</A>.
+									<BR>
+								</FONT>
+							</SPAN>
+							<SPAN>
+								<FONT face="Verdana" size="2">More information about OpenOffice can be found at <A href="http://www.openoffice.org">
+										http://www.openoffice.org</A>. </FONT>
+							</SPAN>
+						</P>
+						<LI>
+							<FONT face="Verdana" size="2">TIFF, GIF, PNG, BMP and JPEG picture format is now 
+								supported in PDF and RTF output types. (BMB and JPEG formats are supported 
+								natively, for other picture formats the GDI+ version of XFRXLIB.FLL is 
+								required)</FONT>
+						</LI>
+			</UL>
+		</DIV>
+		<H3>
+			<hr width="75%">
+		</H3>
+		<h2 class="Section1"><span style="COLOR: black; FONT-FAMILY: Verdana">XFRX version 
+11.1, Release notes</span></h2>
+		<p class="Section1"><span>Release 
+date:&nbsp;7&nbsp;September 2005</span></p>
+		<p></p>
+		<H3><SPAN style="COLOR: black; FONT-FAMILY: Verdana">New features</SPAN></H3>
+		<DIV class="Section1">
+			<UL type="disc">
+				<LI>
+					<FONT face="Verdana" size="2">
+						<P><SPAN><FONT face="Verdana" size="2">Turkish (1254) and Greek (1253) code pages are now 
+									supported in the PDF output</FONT></SPAN></P>
+					</FONT>
+				<LI>
+					<P><FONT face="Verdana"><FONT size="2"><SPAN>A printer properties dialog 
+  for a given printer can now be invoked from XFRX, returning the printer 
+  properties structure as a string. This string can be saved as a user 
+  preference and sent to XFRX when printing. This functionality is similar to 
+  SYS(1037) introduced in VFP 9.0, with two 
+  differences/improvements:</SPAN></FONT></FONT></P>
+					<UL>
+						<LI>
+							<P><FONT face="Verdana"><FONT size="2"><SPAN>The page setup and printer 
+    selection dialogs&nbsp;are skipped, which saves two clicks for the users and 
+    preempts confusions in case the printer has already been selected. (Very 
+    often, there is a printer selection box in the "main" form and a button to 
+    invoke printer properties).</SPAN></FONT></FONT></P>
+						<LI>
+							This implementation works in earlier versions of Visual FoxPro, too (from VFP 
+							5.0)
+						</LI>
+					</UL>
+				<LI>
+					<P><FONT face="Verdana"><FONT size="2"><SPAN>A custom printer properties 
+  structure can be used when XFRX transforms the output to a 
+  printer</SPAN></FONT></FONT></P>
+				<LI>
+					<FONT face="Verdana" size="2">HNDLIB.DLL and XFRXLIB.FLL versions check. When the 
+						required library version is not available, the warning message displays:</FONT>
+					<UL>
+						<LI>
+							<P><FONT face="Verdana" size="2">The version of currently used&nbsp;library file&nbsp; </FONT>
+							</P>
+						<LI>
+							<P><SPAN><FONT face="Verdana" size="2">the required version</FONT></SPAN></P>
+						<LI>
+							<P><SPAN></SPAN><SPAN><FONT face="Verdana" size="2">the location of currently used library 
+										file</FONT></SPAN></P>
+						</LI>
+					</UL>
+				</LI>
+			</UL>
+		</DIV>
+		<P><FONT face="Verdana" size="2"></FONT>&nbsp;</P>
+		<H3><SPAN style="COLOR: black; FONT-FAMILY: Verdana">Bug fixes</SPAN></H3>
+		<UL>
+			<LI>
+				<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">General issues</SPAN>
+				<UL>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">XFRX now supports using THISFORM in&nbsp;before/after 
+    band expressions</SPAN></LI></UL>
+			<LI>
+				<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">VFP 9.0 related issues</SPAN>
+				<UL>
+					<LI>
+						RANGE clause is now supported</LI></UL>
+			<LI>
+				<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">RTF issues</SPAN>
+				<UL>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">The problem with long text being wrapped too early has 
+    been fixed</SPAN></LI></UL>
+			<LI>
+				<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">DOC&nbsp;issues</SPAN>
+				<UL>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">
+							<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">A bug in rectangle transparency/back color calculation 
+    has been fixed</SPAN>
+						</SPAN></LI></UL>
+			<LI>
+				<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">XFRX previewer</SPAN>
+				<UL>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">Right aligned labels position shift has been 
+    fixed</SPAN></LI></UL>
+			<LI>
+				<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">Print engine</SPAN>
+				<UL>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">A bug in rectangle transparency/back color calculation 
+    has been fixed</SPAN>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">TABs are now supported in the printed output</SPAN>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">Problems with early wrapping and stretched text being 
+    too high have been fixed.</SPAN></LI></UL>
+			</LI>
+		</UL>
+		<H3>
+			<hr width="75%">
+		</H3>
+		<h2 class="Section1"><span style="COLOR: black; FONT-FAMILY: Verdana">XFRX version 
+11.0, Release notes</span></h2>
+		<p class="Section1"><span>Release 
+date:&nbsp;2&nbsp;June 2005</span></p>
+		<p></p>
+		<H3><SPAN style="COLOR: black; FONT-FAMILY: Verdana">New features</SPAN></H3>
+		<DIV class="Section1">
+			<UL type="disc">
+				<LI>
+					<FONT face="Verdana" size="2">This version introduces custom scripts. Custom 
+						scripts are methods or code snippets written in Visual FoxPro, which can be 
+						linked to objects on the report or triggered during the processing of the 
+						report, and can be used to "draw" to the report being processed: to generate 
+						pictures, add any custom graphics (graphs, watermarks, etc.), text objects, 
+						hyperlinks, bookmarks and many more.
+						<BR>
+						The new version also allows to bypass the reporting engine altogether and 
+						create any of the output formats supported by XFRX from scratch – directly from 
+						your Visual FoxPro code.&nbsp;&nbsp;<BR>
+						Please see the Developer's guide at <A href="http://www.eqeus.com/xfrxmanual.php">http://www.eqeus.com/xfrxmanual.php</A>
+						for more information.</FONT>
+				<LI>
+					<FONT face="Verdana" size="2">
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">Text 
+  message of the error codes returned by SetParam method can now be retrieved 
+  with ErrorMessage method.</SPAN></FONT></LI></UL>
+		</DIV>
+		<P><FONT face="Verdana" size="2"></FONT>&nbsp;</P>
+		<H3><SPAN style="COLOR: black; FONT-FAMILY: Verdana">Bug fixes</SPAN></H3>
+		<UL>
+			<LI>
+				<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">General issues</SPAN>
+				<UL>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">Striked font style is now supported in all output 
+    formats (except plain text :) )</SPAN>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">If a report didn't exist,&nbsp;the&nbsp;warning message 
+    was not suppressed in the silent mode</SPAN>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">SavePicture method was crashing when the page range was 
+    specified with string value (e.g. "4-5")</SPAN></LI></UL>
+			<LI>
+				<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">VFP 9.0 related issues</SPAN>
+				<UL>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">The problems with XFRXListener initializations when the 
+    support libraries were not in the default directory have been 
+    fixed</SPAN></LI></UL>
+			<LI>
+				<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">FRTF issues</SPAN>
+				<UL>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">The document was displayed in CP 1251 (in cyrilic) when 
+    opened in Open Office.</SPAN>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">Page size calculation problem (long pages were wrapping 
+    to a new page) has been fixed</SPAN></LI></UL>
+			<LI>
+				<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">XLS issues</SPAN>
+				<UL>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">Transparent textboxes are now correctly converted as 
+    trasparent</SPAN></LI></UL>
+			<LI>
+				<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">XFRX previewer</SPAN>
+				<UL>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">Problems with line colors have been fixed</SPAN>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">The printer selection dialog box is now 
+    localizable</SPAN></LI></UL>
+			</LI>
+		</UL>
+		<H3>
+			<hr width="75%">
+		</H3>
+		<h3 class="Section1"><span style="COLOR: black; FONT-FAMILY: Verdana">
+				<H2 class="Section1"><SPAN style="COLOR: black; FONT-FAMILY: Verdana">XFRX version 
+10.2, Release notes</SPAN></H2>
+				<P class="Section1"><SPAN>Release 
+date:&nbsp;20&nbsp;April 2005</SPAN></P>
+			</span></h3>
+		<H3 class="Section1"><SPAN style="COLOR: black; FONT-FAMILY: Verdana">New 
+features</SPAN></H3>
+		<DIV class="Section1">
+			<UL type="disc">
+				<li>
+					<FONT face="Verdana" size="2">XFRX is now able to print the generated reports. You 
+						can print the stored XFF files as well as print directly from the advanced 
+						previewer.The advanced previewer implements a simple printer selection dialog, 
+						with&nbsp;an option to select page ranges to print, which can be easily 
+						overwritten&nbsp;by a custom form.&nbsp;Please see the Developer's guide at <A href="http://www.eqeus.com/xfrxmanual.php">
+							http://www.eqeus.com/xfrxmanual.php</A> for more information. </FONT>
+				</li>
+			</UL>
+		</DIV>
+		<P><FONT face="Verdana" size="2"></FONT>&nbsp;</P>
+		<h3><span style="COLOR: black; FONT-FAMILY: Verdana">Bug fixes</span></h3>
+		<UL type="disc">
+			<LI>
+				<span style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">VFP 9 related issues</span>
+				<UL>
+					<LI>
+						<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">SetOtherParams method is now correctly 
+    implemented</SPAN></LI></UL>
+			<LI>
+				<SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana">PDF issues</SPAN>
+				<UL>
+					<LI>
+						<FONT face="Verdana" size="2">8-bit grayscale JPEG pictures are now supported in 
+							PDF</FONT>
+					<LI>
+						<FONT face="Verdana" size="2">XFRX now saves repeated pictures more effectively 
+							(reduces the size of the final document)</FONT>
+					<LI>
+						<FONT face="Verdana" size="2">If the PDF file could not be created, wrong return 
+							code was returned (-1 instead of -3). This problem has been fixed.</FONT></LI></UL>
+			<LI>
+				<FONT face="Verdana" size="2">XLS issues</FONT>
+				<UL>
+					<LI>
+						<FONT face="Verdana" size="2">rectangle background color is now supported</FONT>
+					<LI>
+						<FONT face="Verdana" size="2">XFRX is now able to generate multiple sheets for a 
+							single report run, in two modes: sheet-per-page or sheet-per-group</FONT>
+					<LI>
+						<FONT face="Verdana" size="2">The sheet names can now be defined as an expression 
+							evaluated for each sheet</FONT>
+					<LI>
+						<FONT face="Verdana" size="2">The grid can now be hidden in the generated XLS 
+							documents</FONT>
+					<LI>
+						<SPAN style="FONT-SIZE: 12pt">
+							<FONT face="Verdana" size="2">By default, the content of non-stretchable fields is 
+								cut according to the size of the field.&nbsp;XFRX can now optionally leave the 
+								full content of the field in the Excel cell. </FONT>
+						</SPAN></LI></UL>
+			<LI>
+				<SPAN style="FONT-SIZE: 12pt">
+					<FONT face="Verdana" size="2">XFRX Previewer</FONT></SPAN>
+				<UL>
+					<LI>
+						<SPAN style="FONT-SIZE: 12pt">
+							<FONT face="Verdana" size="2">The problem with searching with "Use 
+								Wildcards"&nbsp;and "Search Backward" flags has been fixed</FONT></SPAN>
+					<LI>
+						<SPAN style="FONT-SIZE: 12pt">
+							<FONT face="Verdana" size="2">"Search Next" was not working correctly if searching 
+								conditions where modified</FONT></SPAN>
+					<LI>
+						<SPAN style="FONT-SIZE: 12pt">
+							<FONT face="Verdana" size="2">The found expression was not correctly highlighted if 
+								"Use Wildcards" flag was on</FONT></SPAN></LI></UL>
+			<LI>
+				<SPAN style="FONT-SIZE: 12pt">
+					<FONT face="Verdana" size="2">Reporting engine</FONT></SPAN>
+				<UL>
+					<LI>
+						<SPAN style="FONT-SIZE: 12pt">
+							<FONT face="Verdana" size="2">Pictures stretching across multiple bands should 
+								print once per page</FONT></SPAN>
+					<LI>
+						<SPAN style="FONT-SIZE: 12pt">
+							<FONT face="Verdana" size="2">XFRXLIB.FLL version checking has been added</FONT></SPAN>
+					<LI>
+						<SPAN style="FONT-SIZE: 12pt">
+							<FONT face="Verdana" size="2">Various layout problems in FDOC and FRTF output 
+								targets have been fixed</FONT></SPAN></LI></UL>
+			</LI>
+		</UL>
+		</FONT></SPAN>
+	</body>
+</html>

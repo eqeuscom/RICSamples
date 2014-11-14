@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="windows-1252" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:x-xfrx:schemas:dokument:1.0"  xmlns="urn:x-xfrx:schemas:dokument:1.0" elementFormDefault="qualified">
+
+ <xs:complexType name="picture">
+  <xs:attribute name="name" type="xs:string" use="required" />
+  <xs:attribute name="left" type="xs:float" use="required" />
+  <xs:attribute name="top" type="xs:float" use="required" />
+  <xs:attribute name="width" type="xs:float" use="required" />
+  <xs:attribute name="height" type="xs:float" use="required" />
+  <xs:attribute name="borderwidth" type="xs:int" use="required" />
+  <xs:attribute name="borderstyle" type="xs:int" use="required" />
+  <xs:attribute name="bordercolor" type="xs:int" use="required" />
+  <xs:attribute name="backcolor" type="xs:int" use="required" />
+  <xs:attribute name="offset" type="xs:int" use="required" />
+  <xs:attribute name="src" type="xs:string" use="required" />
+  <xs:attribute name="data" type="xs:base64Binary" use="required" />
+  <xs:attribute name="rctype" type="xs:string" use="required" />
+ </xs:complexType>
+
+ <xs:complexType name="line">
+  <xs:attribute name="name" type="xs:string" use="required" />
+  <xs:attribute name="left" type="xs:float" use="required" />
+  <xs:attribute name="top" type="xs:float" use="required" />
+  <xs:attribute name="width" type="xs:float" use="required" />
+  <xs:attribute name="height" type="xs:float" use="required" />
+  <xs:attribute name="borderwidth" type="xs:int" use="required" />
+  <xs:attribute name="borderstyle" type="xs:int" use="required" />
+  <xs:attribute name="bordercolor" type="xs:int" use="required" />
+  <xs:attribute name="rctype" type="xs:string" use="required" />
+ </xs:complexType>
+
+ <xs:complexType name="rectangle">
+  <xs:attribute name="name" type="xs:string" use="required" />
+  <xs:attribute name="left" type="xs:float" use="required" />
+  <xs:attribute name="top" type="xs:float" use="required" />
+  <xs:attribute name="width" type="xs:float" use="required" />
+  <xs:attribute name="height" type="xs:float" use="required" />
+  <xs:attribute name="borderwidth" type="xs:int" use="required" />
+  <xs:attribute name="borderstyle" type="xs:int" use="required" />
+  <xs:attribute name="bordercolor" type="xs:int" use="required" />
+  <xs:attribute name="backcolor" type="xs:int" use="required" />
+  <xs:attribute name="fillstyle" type="xs:int" use="required" />
+  <xs:attribute name="backstyle" type="xs:int" use="required" />
+  <xs:attribute name="offset" type="xs:int" use="required" />
+  <xs:attribute name="rctype" type="xs:string" use="required" />
+ </xs:complexType>
+
+ <xs:complexType name="textbox">
+  <xs:attribute name="name" type="xs:string" use="required" />
+  <xs:attribute name="left" type="xs:float" use="required" />
+  <xs:attribute name="top" type="xs:float" use="required" />
+  <xs:attribute name="width" type="xs:float" use="required" />
+  <xs:attribute name="height" type="xs:float" use="required" />
+  <xs:attribute name="forecolor" type="xs:int" use="required" />
+  <xs:attribute name="backcolor" type="xs:int" use="required" />
+  <xs:attribute name="backstyle" type="xs:int" use="required" />
+  <xs:attribute name="fontname" type="xs:string" use="required" />
+  <xs:attribute name="fontsize" type="xs:int" use="required" />
+  <xs:attribute name="fontstyle" type="xs:string" use="required" />
+  <xs:attribute name="align" type="xs:string" use="required" />
+  <xs:attribute name="rctype" type="xs:string" use="required" />
+  <xs:attribute name="uniqueid" type="xs:string" use="required" />
+  <xs:attribute name="linkname" type="xs:string" use="required" />
+  <xs:attribute name="linkref" type="xs:string" use="required" />
+  <xs:attribute name="outline" type="xs:string" use="required" />
+  <xs:attribute name="outlinestyle" type="xs:int" use="required" />
+  <xs:attribute name="tooltip" type="xs:string" use="required" />
+ </xs:complexType>
+
+ <xs:complexType name="section">
+  <xs:sequence>
+   <xs:choice minOccurs="0" maxOccurs="unbounded">
+    <xs:element name="picture" type="picture" />
+    <xs:element name="line" type="line" />
+    <xs:element name="rectangle" type="rectangle" />
+    <xs:element name="textbox" type="textbox" />
+   </xs:choice>
+  </xs:sequence>
+  <xs:attribute name="type" type="xs:int" use="required" />
+  <xs:attribute name="height" type="xs:float" use="required" />
+  <xs:attribute name="top" type="xs:float" use="required" />
+  <xs:attribute name="rctype" type="xs:string" use="required" />
+ </xs:complexType>
+
+ <xs:complexType name="page">
+  <xs:sequence>
+   <xs:element name="section" type="section" minOccurs="0" maxOccurs="unbounded" />
+  </xs:sequence>
+  <xs:attribute name="order" type="xs:int" use="required" />
+  <xs:attribute name="page" type="xs:int" use="required" />
+  <xs:attribute name="width" type="xs:float" use="required" />
+  <xs:attribute name="height" type="xs:float" use="required" />
+  <xs:attribute name="rctype" type="xs:string" use="required" />
+ </xs:complexType>
+
+ <xs:complexType name="report">
+  <xs:sequence>
+   <xs:element name="page" type="page" minOccurs="1" maxOccurs="unbounded" />
+  </xs:sequence>
+  <xs:attribute name="id" type="xs:int" use="required" />
+  <xs:attribute name="text" type="xs:string" use="required" />
+  <xs:attribute name="pages" type="xs:int" use="required" />
+  <xs:attribute name="TP" type="xs:float" use="required" />
+  <xs:attribute name="BP" type="xs:float" use="required" />
+  <xs:attribute name="LP" type="xs:float" use="required" />
+  <xs:attribute name="RP" type="xs:float" use="required" />
+  <xs:attribute name="TM" type="xs:float" use="required" />
+  <xs:attribute name="TS" type="xs:float" use="required" />
+  <xs:attribute name="LM" type="xs:float" use="required" />
+  <xs:attribute name="RM" type="xs:float" use="required" />
+  <xs:attribute name="BM" type="xs:float" use="required" />
+  <xs:attribute name="UM" type="xs:float" use="required" />
+  <xs:attribute name="rctype" type="xs:string" use="required" />
+ </xs:complexType>
+
+ <xs:element name="reports">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element name="report" type="report" minOccurs="1" maxOccurs="unbounded" />
+   </xs:sequence>
+   <xs:attribute name="version" type="xs:string" use="required" />
+  </xs:complexType>
+ </xs:element>
+</xs:schema>
