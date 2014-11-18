@@ -1,3 +1,4 @@
 .DS_Store
 *.FXP
 *.BAK
+secrets.dbf
