@@ -2,3 +2,4 @@
 *.FXP
 *.BAK
 secrets.dbf
+RICAPIClientVFP/my*.PRG

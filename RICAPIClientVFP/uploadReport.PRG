@@ -64,7 +64,7 @@ endif
 loUserAPI = loBridge.CreateInstance("RICAPIClientLib.API.UserAPIClient", tcOrganization, secrets.secret)
 IF !EMPTY(loBridge.cErrorMsg)
 	? loBridge.cErrorMsg
-endif
+ENDIF
 
 retval = loUserAPI.UploadReport(tcXmlFileName, tcRemoteLocation)
 

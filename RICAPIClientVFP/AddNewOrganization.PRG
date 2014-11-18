@@ -43,7 +43,7 @@ LOCAL lcOrganizationName, lcSubdomainName, lcAdminUserName, lcAdminUserPassword
 lcOrganizationName = "Eqeus.com demo" && Enter the organization name here
 lcSubdomainName = "demo" && enter your domain here (no spaces)
 lcAdminUserName = "admin" && user name, no spaces
-lcAdminUserPassword = "" && yourpasswordhere
+lcAdminUserPassword = "abc" && yourpasswordhere
 
 *
 * add a new organization/domain
