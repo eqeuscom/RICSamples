@@ -23,7 +23,7 @@ ENDIF
 * now upload the report to RIC
 *
 
-UploadReport("invoices.xml", "invoices/invoices123", "demo")
+UploadReport("invoices.xml", "invoices/invoices4", "demo")
 return
 
 
