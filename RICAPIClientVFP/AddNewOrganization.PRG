@@ -10,7 +10,7 @@ lcCustomerName = "CUSTOMER_USER_NAME"
 lcCustomerPassword = "CUSTOMER_PASSWORD"
 
 LOCAL lcOrganizationName, lcSubdomainName, lcAdminUserName, lcAdminUserPassword
-lcOrganizationName = "YOUR_ORGANIZATION_NAME" && Enter the organization name here
+lcOrganizationName = "ORGANIZATION_NAME" && Enter the organization name here
 lcSubdomainName = "YOUR_DOMAIN" && enter your domain here (no spaces)
 lcAdminUserName = "admin" && user name, no spaces
 lcAdminUserPassword = "USER_PASSWORD" && the new admin user password goes here
@@ -29,7 +29,7 @@ ENDIF
 *
 * add a new organization/domain
 *
-retval = RIC_AddOrganization(lcOrganizationName, lcSubdomainName, lcAdminUserName, lcAdminUserPassword)
+retval = RIC_AddOrganization(lcCustomerName, lcCustomerPassword, lcOrganizationName, lcSubdomainName, lcAdminUserName, lcAdminUserPassword)
 ? "adding a new organization ..."
 IF retval.IsOK
 	? "organization added successfully"
