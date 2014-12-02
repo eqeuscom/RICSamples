@@ -1,58 +1,36 @@
-CLEAR
+CLOSE ALL
 *
-* set up wwDotNetBridge
+* PARAMETERS
 *
-do wwDotNetBridge
-LOCAL loBridge as wwDotNetBridge
-loBridge = CreateObject("wwDotNetBridge","V4")
-
-loBridge.LoadAssembly("RICAPIClientLib.dll")
-IF !EMPTY(loBridge.cErrorMsg)
-	? loBridge.cErrorMsg
-endif
-loBridge.LoadAssembly("System.Net.Http.Formatting")
-IF !EMPTY(loBridge.cErrorMsg)
-	? loBridge.cErrorMsg
-endif
-loBridge.LoadAssembly("Newtonsoft.Json")
-IF !EMPTY(loBridge.cErrorMsg)
-	? loBridge.cErrorMsg
-endif
-
-*
-* customer API setup
-*
-LOCAL loCustomerAPI, retval, lcOrgID, loOrg, lcSecret
-
 LOCAL lcCustomerName, lcCustomerPassword
 *
 * the following are the "customer" level user name and password, the same you use to log in to www.eqeus.net/xfrx to download new XFRX versions
 *
-lcCustomerName = "martinsu"
-lcCustomerPassword = "aaa"
-*
-* set up the API client object
-*
-loCustomerAPI = loBridge.CreateInstance("RICAPIClientLib.API.CustomerAPIClient", lcCustomerName, lcCustomerPassword)
-IF !EMPTY(loBridge.cErrorMsg)
-	? loBridge.cErrorMsg
-endif
+lcCustomerName = "CUSTOMER_USER_NAME"
+lcCustomerPassword = "CUSTOMER_PASSWORD"
 
 LOCAL lcOrganizationName, lcSubdomainName, lcAdminUserName, lcAdminUserPassword
-
-lcOrganizationName = "Eqeus.com demo" && Enter the organization name here
-lcSubdomainName = "demo" && enter your domain here (no spaces)
+lcOrganizationName = "YOUR_ORGANIZATION_NAME" && Enter the organization name here
+lcSubdomainName = "YOUR_DOMAIN" && enter your domain here (no spaces)
 lcAdminUserName = "admin" && user name, no spaces
-lcAdminUserPassword = "abc" && yourpasswordhere
+lcAdminUserPassword = "USER_PASSWORD" && the new admin user password goes here
+
+*
+* set up the reports in cloud helpers
+*
+SET PROCEDURE TO RICHelpers ADDITIVE 
+LOCAL lcSetupError
+lcSetupError = RIC_SetupWWDotNetBridge()
+IF !EMPTY(lcSetupError)
+	? "error: "+lcSetupError
+	RETURN
+ENDIF
 
 *
 * add a new organization/domain
 *
+retval = RIC_AddOrganization(lcOrganizationName, lcSubdomainName, lcAdminUserName, lcAdminUserPassword)
 ? "adding a new organization ..."
-retval = loCustomerAPI.AddOrganization(lcOrganizationName, lcSubdomainName, lcAdminUserName, lcAdminUserPassword)
-IF !EMPTY(loBridge.cErrorMsg)
-	? loBridge.cErrorMsg
-endif
 IF retval.IsOK
 	? "organization added successfully"
 	? "admin user secret: "+retval.Data.AdminUserSecret

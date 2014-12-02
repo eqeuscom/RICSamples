@@ -1,13 +1,30 @@
 close all
+*
+* PARAMETERS
+*
+LOCAL remoteReportName, organizationName
+remoteReportName = "invoices/invoices4"
+organizationName = "XXXXX" && put your organization name here
 
+*
+* set up the reports in cloud helpers
+*
+SET PROCEDURE TO RICHelpers ADDITIVE 
+LOCAL lcSetupError
+lcSetupError = RIC_SetupWWDotNetBridge()
+IF !EMPTY(lcSetupError)
+	? "error: "+lcSetupError
+	RETURN
+ENDIF
+
+*
+* set up XFRX
+*
 SET PATH TO xfrxdemo
-SET PROCEDURE TO utilityreportlistener
+SET PROCEDURE TO utilityreportlistener ADDITIVE 
 
 use xfrxdemo\demoreps\invoices order customer
 LOCAL loObj
-*
-* get the xfrxlistener object reference
-*
 loObj = XFRX("XFRX#LISTENER")
 lnRetVal = loObj.SetParams("invoices.xml",,,,,,"XML")
 *
@@ -23,33 +40,16 @@ ENDIF
 * now upload the report to RIC
 *
 
-UploadReport("invoices.xml", "invoices/invoices4", "demo")
-return
+UploadReport("invoices.xml", remoteReportName, organizationName)
+RETURN
 
 
 PROCEDURE UploadReport
 LPARAMETERS tcXmlFileName, tcRemoteLocation, tcOrganization
-
-
-do wwDotNetBridge
-LOCAL loBridge as wwDotNetBridge
-loBridge = CreateObject("wwDotNetBridge","V4")
-
-loBridge.LoadAssembly("RICAPIClientLib.dll")
-IF !EMPTY(loBridge.cErrorMsg)
-	? loBridge.cErrorMsg
-endif
-loBridge.LoadAssembly("System.Net.Http.Formatting")
-IF !EMPTY(loBridge.cErrorMsg)
-	? loBridge.cErrorMsg
-endif
-loBridge.LoadAssembly("Newtonsoft.Json")
-IF !EMPTY(loBridge.cErrorMsg)
-	? loBridge.cErrorMsg
-endif
-
-LOCAL loUserAPI, retval
-
+*
+* use the secrets table to get the secret for the given organization
+* and upload the report to the server
+*
 IF NOT USED("secrets")
 	USE secrets IN 0
 ENDIF
@@ -61,16 +61,12 @@ IF NOT FOUND()
 	RETURN
 endif
 
-loUserAPI = loBridge.CreateInstance("RICAPIClientLib.API.UserAPIClient", tcOrganization, secrets.secret)
-IF !EMPTY(loBridge.cErrorMsg)
-	? loBridge.cErrorMsg
-ENDIF
+LOCAL lcretval
+lcretval = RIC_UploadReport(tcXmlFileName, tcRemoteLocation, tcOrganization, secrets.secret)
 
-retval = loUserAPI.UploadReport(tcXmlFileName, tcRemoteLocation)
-
-IF retval.IsOK
+IF lcretval.IsOK
 	? "report uploaded successfully"
 ELSE
-	_cliptext = retval.ErrorMessage
-	? "error:", retval.ErrorMessage
+	_cliptext = ErrorMessage.lcretval
+	? "error:", ErrorMessage.lcretval
 ENDIF
