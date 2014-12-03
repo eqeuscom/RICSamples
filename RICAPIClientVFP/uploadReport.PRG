@@ -2,9 +2,9 @@ close all
 *
 * PARAMETERS
 *
-LOCAL remoteReportName, organizationName
+LOCAL remoteReportName, organizationSubdomain
 remoteReportName = "invoices/invoices4"
-organizationName = "XXXXX" && put your organization name here
+organizationSubdomain = "XXXXX" && put your organization subdomain here
 
 *
 * set up the reports in cloud helpers
@@ -40,7 +40,7 @@ ENDIF
 * now upload the report to RIC
 *
 
-UploadReport("invoices.xml", remoteReportName, organizationName)
+UploadReport("invoices.xml", remoteReportName, organizationSubdomain)
 RETURN
 
 
