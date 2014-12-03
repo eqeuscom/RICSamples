@@ -5,7 +5,6 @@ LOCAL loCustomerAPI, loretval, loReturnStructure
 * set up the API client object
 *
 loCustomerAPI = goBridge.CreateInstance("RICAPIClientLib.API.CustomerAPIClient", tcCustomerName, tcCustomerPassword)
-loCustomerAPI.BaseURL = "http://api.reportsincloud.com"
 
 IF !EMPTY(goBridge.cErrorMsg)
 	RETURN StructuredError(goBridge.cErrorMsg)
@@ -31,7 +30,6 @@ loUserAPI = goBridge.CreateInstance("RICAPIClientLib.API.UserAPIClient", tcOrgan
 IF !EMPTY(goBridge.cErrorMsg)
 	return StructuredError(goBridge.cErrorMsg)
 ENDIF
-loUserAPI.BaseURL = "http://{organization}.reportsincloud.com";
 
 retval = loUserAPI.UploadReport(tcXmlFileName, tcRemoteLocation)
 
