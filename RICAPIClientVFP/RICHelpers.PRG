@@ -30,11 +30,29 @@ loUserAPI = goBridge.CreateInstance("RICAPIClientLib.API.UserAPIClient", tcOrgan
 IF !EMPTY(goBridge.cErrorMsg)
 	return StructuredError(goBridge.cErrorMsg)
 ENDIF
-
 retval = loUserAPI.UploadReport(tcXmlFileName, tcRemoteLocation)
 
 RETURN retval
 ENDPROC
+
+PROCEDURE RIC_UploadExportedFile
+*
+* uploads the XML file into the repository for the given organization, using the secret token for authentication
+*
+LPARAMETERS tcXmlFileName, tcType, tcRemoteLocation, tcOrganization, tcSecret
+
+LOCAL loUserAPI, retval
+
+loUserAPI = goBridge.CreateInstance("RICAPIClientLib.API.UserAPIClient", tcOrganization, tcSecret)
+IF !EMPTY(goBridge.cErrorMsg)
+	return StructuredError(goBridge.cErrorMsg)
+ENDIF
+*loUserAPI.BaseURL = "http://localhost"
+retval = loUserAPI.UploadExportedFile(tcXmlFileName, tcType, tcRemoteLocation)
+
+RETURN retval
+ENDPROC
+
 
 PROCEDURE RIC_SetupWWDotNetBridge
 *
@@ -65,7 +83,7 @@ DEFINE CLASS RIC_StructuredErrorValue AS Custom
 ENDDEFINE
 
 PROCEDURE StructuredError
-LOCAL lcErrorMessage
+LPARAMETERS lcErrorMessage
 	loReturnStructure = CREATEOBJECT("RIC_StructuredErrorValue")
 	loReturnStructure.IsOK = .F.
 	loReturnStructure.ErrorMessage = lcErrorMessage

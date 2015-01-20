@@ -48,15 +48,15 @@ font-size:10.0pt; font-family:Verdana;
 		--
 		--
 		--
-		-- Release notes version 15.1
+		-- Release notes version 15.2
 		--
 		--
 		--
 		-->
 		<H2 class="Section1">
-			XFRX versions 15.1, Release notes</H2>
+			XFRX versions 15.2, Release notes</H2>
 		<p class="Section1">
-		Release date:&nbsp;5&nbsp;Sep 2014
+		Release date:&nbsp;26&nbsp;Nov 2014
 		</p>
 		<div style="BORDER-RIGHT: red 2px solid; PADDING-RIGHT: 8px; BORDER-TOP: red 2px solid; PADDING-LEFT: 8px; PADDING-BOTTOM: 8px; BORDER-LEFT: red 2px solid; PADDING-TOP: 8px; BORDER-BOTTOM: red 2px solid">
 			<B>Important installation note for the latest version</B>
@@ -108,6 +108,105 @@ SET PROCEDURE TO utilityReportListener.prg ADDITIVE
 					to be installed (the previous version required <STRONG>GDIPLUS.DLL </STRONG>and <STRONG>
 						MSVCR71.DLL</STRONG> libraries), all three libraries are required now</LI></UL>
 		</div>
+
+    <H3>New features</H3>	
+    <ul>
+    <li><b>New output type: Data export to XLSX and ODS</b> 
+        <br />
+This new feature allows for exporting table/cursor data into Excel or OpenOffice spreadsheets, similarly to the COPY TO  … TYPE XL5 command, with the following enhancements:
+        <ul>
+            <li>
+The number of records is not limited to 65K. The current Excel limit is 1,048,576 rows per sheet. If the number of exported rows is larger, the output goes into multiple sheets.
+            </li>
+            <li>
+The generated file can be up to 2GB in size 
+            </li>
+            <li>
+Formatting options, including dynamic (conditional) formatting, column width, header names and styles and text trimming
+            </li>
+        </ul>
+        <br />
+        Please see details and code samples in our documentation wiki at <a href="https://eqeuscom.atlassian.net/wiki/display/DOC/Data+export+to+XLSX+and+ODS">https://eqeuscom.atlassian.net/wiki/display/DOC/Data+export+to+XLSX+and+ODS</a>
+        <br />
+        <br />
+       </li>
+    </ul>
+<H3>Bugs fixed</H3>
+<UL type="disc">
+    <li>XFRX Core</li>
+    <ul>
+        <li>Incorrect codepage converted from blank resoid.</li>
+        <li>All outputs (except DOC, HTML, PDF) ignore #UR ROTATE for images</li>
+        <li>BIG report (cca 4000) pages - output do not contains images or other objects. Log file contain error message: 1190 - File "name" is too large. To workaround this, you have
+            the following options:
+            <ul>
+                <li>Reduce image size</li>
+                <li> Run "SET BLOCKSIZE TO 0" before instantiating the XFRX object</li>
+                <li> Use other params "BIGREPORT" (call loXFRX.SetOtherParams("BIGREPORT",.T.) ) </li>
+            </ul> 
+        </li>
+        <li>ProcessReport method to always use SET EXACT OFF.</li>
+        <li>Images display as "scale contents, fill frame" instead "scale contents, retain shape" for source type "Image file name".</li>
+    </ul>
+    <li>XFRX previewer</li>
+    <ul>
+        <li>Error messages "Unknown _XFVFPVERSION - Undefined", "Unknown _XFPRINTERPROPERTIES - Undefined" when compiling project that include xfrxlib.vcx</li>
+        <li>Print dialog freezing on 64-bit OS</li>
+    </ul>
+    <li>XPS</li>
+    <ul>
+        <li> XPS documents do not show symbols.  </li>
+        <li> XPS incorrect rendering of images with DPI <> 96.  </li>
+    </ul>
+    <li>NATIVE_DOCX, NATIVE_FDOCX</li>
+    <ul>
+        <li> Wrong textbox frame width for multiline report label.</li>
+        <li> Missing or redundant page header/footer</li>
+    </ul>
+    <li>NATIVE_FXLSX, NATIVE_PFXLSX</li>
+    <ul>
+        <li> Centered alignment rendered as a right one.</li>
+        <li> Wrong rectangle colors.  </li>
+        <li> NEXT_SHEET_NAME/NEXT_SHEET_NAME_EXPR parameters not respected</li>
+    </ul>
+    <li> PDF </li>
+    <ul>
+        <li>Unreadable PDF from XFRX under VFP 5.0-7.0 </li>
+        <li>italics style lost for some fonts under XP/WV/W7/W8</li>
+        <li>PDFs with chinese/japanese texts (uses UNICODE) are not searchable.</li>
+    </ul>
+    <li> FDOC, FRTF, FDOS, NATIVE_FDOCX </li>
+    <ul>
+        <li>Wrong multiline text generation.</li>
+    </ul>
+    <li> XLS, XLSPLAIN </li>
+    <ul>
+        <li>Intermittent missing images.</li>
+    </ul>
+    <li>Open office</li>
+    <ul>
+        <li>Text in cells and textboxs doesn't show StrikeThru.</li>
+    </ul>
+</ul>
+
+	
+<br />
+		<hr width="75%">
+        <!--
+		--
+		--
+		--
+		-- Release notes version 15.1
+		--
+		--
+		--
+		-->
+		<H2 class="Section1">
+			XFRX versions 15.1, Release notes</H2>
+		<p class="Section1">
+		Release date:&nbsp;5&nbsp;Sep 2014
+		</p>
+<p>
 <H3>New features</H3>	
     <ul>
     <li><b>New output type: Native Excel (xlsx) output</b> 
