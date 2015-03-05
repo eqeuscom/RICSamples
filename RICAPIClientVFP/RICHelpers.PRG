@@ -30,6 +30,7 @@ loUserAPI = goBridge.CreateInstance("RICAPIClientLib.API.UserAPIClient", tcOrgan
 IF !EMPTY(goBridge.cErrorMsg)
 	return StructuredError(goBridge.cErrorMsg)
 ENDIF
+PostUserAPISetup(loUserAPI)
 retval = loUserAPI.UploadReport(tcXmlFileName, tcRemoteLocation)
 
 RETURN retval
@@ -47,12 +48,41 @@ loUserAPI = goBridge.CreateInstance("RICAPIClientLib.API.UserAPIClient", tcOrgan
 IF !EMPTY(goBridge.cErrorMsg)
 	return StructuredError(goBridge.cErrorMsg)
 ENDIF
-*loUserAPI.BaseURL = "http://localhost"
+PostUserAPISetup(loUserAPI)
 retval = loUserAPI.UploadExportedFile(tcXmlFileName, tcType, tcRemoteLocation)
 
 RETURN retval
 ENDPROC
 
+PROCEDURE RIC_GetRoles
+LPARAMETERS tcOrganization, tcSecret
+LOCAL loUserAPI, retval
+loUserAPI = goBridge.CreateInstance("RICAPIClientLib.API.UserAPIClient", tcOrganization, tcSecret)
+IF !EMPTY(goBridge.cErrorMsg)
+	return StructuredError(goBridge.cErrorMsg)
+ENDIF
+PostUserAPISetup(loUserAPI)
+local loRoles, lodata
+loRoles = loUserAPI.GetRoles()
+if loRoles.IsOK
+	*
+	* modify the structure returned from .net to be accessible from VFP
+	*
+	lodata = goBridge.CreateArray()
+	lodata.FromEnumerable(loRoles.data)
+	loRoles.data = lodata
+ENDIF
+return loRoles
+
+PROCEDURE RIC_AddRole
+LPARAMETERS tcOrganization, tcSecret, tcRoleName, tcUserList
+LOCAL loUserAPI, retval
+loUserAPI = goBridge.CreateInstance("RICAPIClientLib.API.UserAPIClient", tcOrganization, tcSecret)
+IF !EMPTY(goBridge.cErrorMsg)
+	return StructuredError(goBridge.cErrorMsg)
+ENDIF
+PostUserAPISetup(loUserAPI)
+return loUserAPI.AddRole(tcRoleName, tcUserList)
 
 PROCEDURE RIC_SetupWWDotNetBridge
 *
