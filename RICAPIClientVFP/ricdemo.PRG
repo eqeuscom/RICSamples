@@ -27,7 +27,6 @@ LOCAL lcSecret, lcretval, lnCount, lcRoleName, loUserAPI, loOrganizationAPI, lcL
 lcLogFile = "ric.log"
 loOrganizationAPI = RIC_GetOrganizationAPIClient(lcCustomerName, lcCustomerPassword)
 loOrganizationAPI.logFile = lcLogFile
-loOrganizationAPI.DeleteTempFile = .F.
 *
 * add a new organization/domain
 *
@@ -48,15 +47,16 @@ IF loRetval.IsOK
 	INSERT INTO secrets VALUES (lcOrgID, lcOrganization, lcOrganizationSubdomain, loretval.data[1].AdminUserSecret)
 	lcSecret = loretval.Data[1].AdminUserSecret
 	
-* testing on localhost     *	strtofile(CHR(13)+CHR(10)+CHR(9)+"127.0.0.1"+CHR(9)+lcOrganizationSubdomain+".reportsincloud.com", "C:\Windows\System32\drivers\etc\hosts", .t.)
-	
 	*
 	* note: you need to store the secret to be able to authenticate when accessing the user api. In this demo we are storing the secret in a variable here, but also in the secrets dbf. 
 	* You can call 
 	*
 	* lcSecret = GetSecret(lcOrganizationSubdomain)
 	*
-	* to retrieve the secret
+	* to retrieve the secret.
+	*
+	* The secret is also displayed in the organization detail in the administration console at https://admin.reportsincloud.com
+	*
 ELSE
 	? "could not add a new organization"
 	? "error:", loretval.ErrorMessage
