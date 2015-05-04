@@ -6,8 +6,8 @@ LOCAL lcCustomerName, lcCustomerPassword, lcOrganization, lcOrganizationSubdomai
 * 1. parameters 
 lcCustomerName = "YourXFRXLogin" 		&& Put your XFRX login name here
 lcCustomerPassword = "YourXFRXPassword" && Put your XFRX password here
-lcOrganization = "org"+STRTRAN(sys(2015),'_','-') 		&& Put your new test organization name here
-lcOrganizationSubdomain = lcOrganization
+lcOrganization = "org"+STRTRAN(sys(2015),'_','-') 		&& This is the name of the organization we are going to create. Leave this to generate a random name
+lcOrganizationSubdomain = lcOrganization && The subdomain is the same as the organization name
 lcAdminUserName = "admin"  				&& Login for new organization administrator
 lcAdminUserPassword = "test123" 		&& Password for new organization Administrator
 
@@ -46,7 +46,7 @@ loRetval = loUserApi.UploadReport("invoices.xml", "Invoices demo 1")
 IF loRetval.IsOK
 	? "Report Invoices demo 1 created and uploaded successfully."
 	?
-	? "Log in to "+lcOrganization+".reportsincloud.com to see your demo report in cloud (URL copied in cliboard)" +CHR(13)+CHR(10)+"Login: "+lcAdminUserName+CHR(13)+CHR(10)+"Password: "+lcAdminUserPassword
+	? "Log in to "+lcOrganization+".reportsincloud.com to see your demo report in the web browser (URL copied in cliboard)" +CHR(13)+CHR(10)+"Login: "+lcAdminUserName+CHR(13)+CHR(10)+"Password: "+lcAdminUserPassword
 	_cliptext = "https://"+lcOrganizationSubdomain+".reportsincloud.com"
 ELSE
 	? "error:", loRetval.ErrorMessage	
