@@ -39,13 +39,13 @@ IF loRetval.IsOK
 	? "organization "+lcOrganization+" added successfully"
 	? "URL: https://"+lcOrganizationSubdomain+".reportsincloud.com (copied to clipboard)"
 	_cliptext = "https://"+lcOrganizationSubdomain+".reportsincloud.com"
-	? "admin user lcSecret: "+loretval.Data[1].AdminUserSecret
-	lcOrgID = loretval.Data[1].id
+	? "admin user lcSecret: "+loretval.Data[1].RIC_AdminUserSecret
+	lcOrgID = loretval.Data[1].RIC_ID
 	? "organization id: ", lcOrgID
 	? ""
 	CreateOrOpenSecretsTable()
-	INSERT INTO secrets VALUES (lcOrgID, lcOrganization, lcOrganizationSubdomain, loretval.data[1].AdminUserSecret)
-	lcSecret = loretval.Data[1].AdminUserSecret
+	INSERT INTO secrets VALUES (lcOrgID, lcOrganization, lcOrganizationSubdomain, loretval.data[1].RIC_AdminUserSecret)
+	lcSecret = loretval.Data[1].RIC_AdminUserSecret
 	
 	*
 	* note: you need to store the secret to be able to authenticate when accessing the user api. In this demo we are storing the secret in a variable here, but also in the secrets dbf. 
@@ -75,7 +75,7 @@ loOrgData = loRetval.Data[1]
 DisplayOrganizationDetails(loOrgData)
 
 ? "update the login message for our organization"
-loOrgData.LoginMessage = "hello, welcome to our reports area!"
+loOrgData.RIC_LoginMessage = "hello, welcome to our reports area!"
 loRetval = loOrganizationAPI.UpdateOrganization(loOrgData)
 IF !loRetval.IsOK
 	? "error:", loRetval.ErrorMessage	
@@ -284,7 +284,7 @@ LPARAMETERS toRoles
 		? ALLTRIM(STR(toRoles.datacount))+" role(s)"
 		FOR lnX = 1 TO toRoles.datacount
 			loRole = toRoles.data(lnX)
-			? ALLTRIM(STR(lnX))+":",loRole.ID, loRole.Name+" ("+loRole.UserList+")"
+			? ALLTRIM(STR(lnX))+":",loRole.RIC_ID, loRole.RIC_Name+" ("+loRole.RIC_UserList+")"
 		ENDFOR		
 	ENDIF
 ENDPROC
@@ -297,7 +297,7 @@ LPARAMETERS toUsers
 		? ALLTRIM(STR(toUsers.datacount))+" user(s)"
 		FOR lnX = 1 TO toUsers.datacount
 			loUser = toUsers.data(lnX)
-			? ALLTRIM(STR(lnX))+":",loUser.ID, loUser.Name+" ("+loUser.Roles+")"
+			? ALLTRIM(STR(lnX))+":",loUser.RIC_ID, loUser.RIC_UserName+" ("+loUser.RIC_Roles+")"
 		ENDFOR		
 	ENDIF
 ENDPROC
@@ -305,12 +305,12 @@ ENDPROC
 PROCEDURE DisplayOrganizationDetails
 LPARAMETERS toOrg
 ? "Organization details"
-? "ID:", toOrg.ID
-? "Name:", toOrg.Name
-? "SubDomainName:", toOrg.SubDomainName
-? "BaseURL:", toOrg.BaseURL
-? "TotalUsers:", toOrg.TotalUsers
-? "LoginMessage:", toOrg.LoginMessage
+? "ID:", toOrg.RIC_ID
+? "Name:", toOrg.RIC_Name
+? "SubDomainName:", toOrg.RIC_SubDomainName
+? "BaseURL:", toOrg.RIC_BaseURL
+? "TotalUsers:", toOrg.RIC_TotalUsers
+? "LoginMessage:", toOrg.RIC_LoginMessage
 
 
 PROCEDURE CreateOrOpenSecretsTable()

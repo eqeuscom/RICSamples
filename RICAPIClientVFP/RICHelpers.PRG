@@ -169,7 +169,7 @@ DEFINE CLASS APIClient as Custom
 						llInsideObject = .t.
 						local lnPos, lcKey, lcValue
 						lnPos = AT(" ", lcLine)
-						lcKey = SUBSTR(lcLine, 1, lnPos-1)
+						lcKey = 'RIC_' + SUBSTR(lcLine, 1, lnPos-1)
 						lcValue = SUBSTR(lcLine, lnPos+1)
 						loNewObject.AddProperty(lcKey, lcValue)
 					ENDIF					
@@ -195,10 +195,10 @@ DEFINE CLASS APIClient as Custom
 	lcFile = ADDBS(sys(2023))+"_RU"+sys(3)
 	lnh = fcreate(lcFile)
 	FPUTS(lnh, "[")
-	FPUTS(lnh, "ID "+toOrg.ID)	
-	FPUTS(lnh, "Name "+toOrg.Name)	
-	FPUTS(lnh, "SubDomainName "+toOrg.SubDomainName)	
-	FPUTS(lnh, "LoginMessage "+toOrg.LoginMessage)	
+	FPUTS(lnh, "ID "+toOrg.RIC_ID)	
+	FPUTS(lnh, "Name "+toOrg.RIC_Name)	
+	FPUTS(lnh, "SubDomainName "+toOrg.RIC_SubDomainName)	
+	FPUTS(lnh, "LoginMessage "+toOrg.RIC_LoginMessage)	
 	FPUTS(lnh, "]")
 	FCLOSE(lnh)
 	return lcFile
@@ -228,7 +228,7 @@ DEFINE CLASS RIC_OrganizationAPIClient as APIClient
 	lcTempFile = this.SerializeOrganization(toOrg)
 	loRetval = this.CallAPI("UPDATEORGANIZATION", MergeParameters1(lcTempFile))
 	if this.DeleteTempFile
-		erase (tcFileName)
+		erase (lcTempFile)
 	ENDIF	
 	return loRetval
 	ENDPROC
@@ -263,8 +263,8 @@ DEFINE CLASS RIC_UserAPIClient as APIClient
 	return this.CallAPI("ADDUSER",MergeParameters5(tcUserName, tcPassword, tcRealName, IIF(tlIsAdmin,"true","false"), tcRoleList))		
 
 	PROCEDURE UpdateUser
-	LPARAMETERS tcUserName, tcPassword, tcRealName, tcIsAdmin, tcRoleList
-	return this.CallAPI("UPDATEUSER",MergeParameters5(tcUserName, tcPassword, tcRealName, tcIsAdmin, tcRoleList))		
+	LPARAMETERS tcUserName, tcPassword, tcRealName, tlIsAdmin, tcRoleList
+	return this.CallAPI("UPDATEUSER",MergeParameters5(tcUserName, tcPassword, tcRealName, IIF(tlIsAdmin,"true","false"), tcRoleList))		
 
 	PROCEDURE DeleteUser
 	LPARAMETERS tcUserName
