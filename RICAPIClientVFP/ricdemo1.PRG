@@ -42,7 +42,7 @@ ENDIF
 *lcLogFile = "ric.log"
 loUserAPI = RIC_GetUserAPIClient(lcOrganizationSubdomain, lcSecret)
 loUserAPI.LogFile = lcLogFile
-loRetval = loUserApi.UploadReport("invoices.xml", "Invoices demo 1")
+loRetval = loUserApi.UploadReport("invoices.xml", "invoices/Invoices demo 1")
 IF loRetval.IsOK
 	? "Report Invoices demo 1 created and uploaded successfully."
 	?
