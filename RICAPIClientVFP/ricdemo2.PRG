@@ -5,13 +5,15 @@ CD JUSTPATH(SYS(16))
 SET PROCEDURE TO RICHelpers ADDITIVE
 
 LOCAL lcCustomerName, lcCustomerPassword, lcOrganization, lcOrganizationSubdomain, lcAdminUserName, lcAdminUserPassword
+
 *
 * the following are the "customer" level user name and password, the same you use to log in to www.eqeus.net/xfrx to download new XFRX versions
 *
-lcCustomerName = "USERNAME" && put your customer name here
-lcCustomerPassword = "PASSWORD" && your password goes here
-lcOrganization = "org"+sys(2015) && this is a name of the newly created organization
-lcOrganizationSubdomain = lcOrganization
+lcCustomerName = "USERNAME" 		     && Put your XFRX login name here
+lcCustomerPassword = "PASSWORD"          && Put your XFRX password here
+lcOrganization = "org"+STRTRAN(sys(2015),'_','-') 		&& This is the name of the organization we are going to create. Leave this to generate a random name
+lcOrganizationSubdomain = lcOrganization && The subdomain is the same as the organization name
+
 *
 * use the user name and password to sign in into the web application. To call the API you need to use the "secret" string returned when adding
 * the new organization
@@ -30,18 +32,18 @@ loOrganizationAPI.logFile = lcLogFile
 *
 * add a new organization/domain
 *
-? "adding a new organization, user quota set to 5"
+? "Add a new organization, user quota set to 5"
 loRetval = loOrganizationAPI.AddOrganization(lcOrganization, lcOrganizationSubdomain, lcAdminUserName, lcAdminUserPassword, 5)
 IF loRetval.IsOK
 	*
 	* we got back a structure with details about the newly created organization
 	*
-	? "organization "+lcOrganization+" added successfully"
+	? "The new organization "+lcOrganization+" added successfully"
 	? "URL: https://"+lcOrganizationSubdomain+".reportsincloud.com (copied to clipboard)"
 	_cliptext = "https://"+lcOrganizationSubdomain+".reportsincloud.com"
 	? "admin user lcSecret: "+loretval.Data[1].RIC_AdminUserSecret
 	lcOrgID = loretval.Data[1].RIC_ID
-	? "organization id: ", lcOrgID
+	? "Internal organization id: ", lcOrgID
 	? ""
 	CreateOrOpenSecretsTable()
 	INSERT INTO secrets VALUES (lcOrgID, lcOrganization, lcOrganizationSubdomain, loretval.data[1].RIC_AdminUserSecret)
@@ -74,13 +76,16 @@ local loOrgData
 loOrgData = loRetval.Data[1]
 DisplayOrganizationDetails(loOrgData)
 
-? "update the login message for our organization"
+? ""
 loOrgData.RIC_LoginMessage = "hello, welcome to our reports area!"
+? "Update the login message for our organization to: "+loOrgData.RIC_LoginMessage
 loRetval = loOrganizationAPI.UpdateOrganization(loOrgData)
 IF !loRetval.IsOK
 	? "error:", loRetval.ErrorMessage	
 	return
 ENDIF
+? "Updated"
+? ""
 
 *
 * User API demo
@@ -150,7 +155,7 @@ ENDIF
 *
 * set up XFRX
 *
-? "uploading a report to area1 as 'area1/Invoices report 1'"
+? "upload a report to area1 as 'area1/Invoices report 1'"
 
 SET PATH TO xfrxdemo
 SET PROCEDURE TO utilityreportlistener ADDITIVE 
@@ -216,7 +221,7 @@ IF !loRetval.IsOK
 	return
 ENDIF
 
-? "uploading a report to area2 as 'area2/Invoices report 2'"
+? "upload a report to area2 as 'area2/Invoices report 2'"
 *
 * now upload the same report to area2 
 *
@@ -254,7 +259,7 @@ ENDIF
 ? "now jane can see 'area2' folder because it contains a report she can see"
 
 
-
+? ""
 ? "Roles list"
 loRetval = loUserApi.GetRoles()
 IF !loRetval.IsOK
@@ -264,6 +269,7 @@ ELSE
 	ListRoles(loRetval)
 ENDIF
 
+? ""
 ? "User list"
 loRetval = loUserApi.GetUsers()
 IF !loRetval.IsOK
@@ -284,7 +290,8 @@ LPARAMETERS toRoles
 		? ALLTRIM(STR(toRoles.datacount))+" role(s)"
 		FOR lnX = 1 TO toRoles.datacount
 			loRole = toRoles.data(lnX)
-			? ALLTRIM(STR(lnX))+":",loRole.RIC_ID, loRole.RIC_Name+" ("+loRole.RIC_UserList+")"
+			* loRole.RIC_ID
+			? ALLTRIM(STR(lnX))+":", loRole.RIC_Name+" (users in this role:"+loRole.RIC_UserList+")"
 		ENDFOR		
 	ENDIF
 ENDPROC
@@ -297,14 +304,15 @@ LPARAMETERS toUsers
 		? ALLTRIM(STR(toUsers.datacount))+" user(s)"
 		FOR lnX = 1 TO toUsers.datacount
 			loUser = toUsers.data(lnX)
-			? ALLTRIM(STR(lnX))+":",loUser.RIC_ID, loUser.RIC_UserName+" ("+loUser.RIC_Roles+")"
+			* loUser.RIC_ID
+			? ALLTRIM(STR(lnX))+":", loUser.RIC_UserName+" (roles:"+loUser.RIC_Roles+")"
 		ENDFOR		
 	ENDIF
 ENDPROC
 
 PROCEDURE DisplayOrganizationDetails
 LPARAMETERS toOrg
-? "Organization details"
+? "Organization details:"
 ? "ID:", toOrg.RIC_ID
 ? "Name:", toOrg.RIC_Name
 ? "SubDomainName:", toOrg.RIC_SubDomainName
