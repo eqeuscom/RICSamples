@@ -8,8 +8,8 @@ SET PATH TO (m.lcPath) ADDITIVE
 
 SET PROCEDURE TO (m.lcPath+"RICHelpers") ADDITIVE
 
-#DEFINE XFRX_CUSTOMER_NAME "PUT YOUR CUSTOMER NAME HERE"
-#DEFINE XFRX_CUSTOMER_PWD  "PUT YOUR PASSWORD HERE"
+#DEFINE XFRX_CUSTOMER_NAME "COPY_YOUR_CUSTOMER_NAME_HERE"
+#DEFINE XFRX_CUSTOMER_PWD  "COPY_YOUR_PASSWORD_HERE"
 
 m.lcOrgName      = "org"+STRTRAN(sys(2015),'_','-') && Organization name
 m.lcOrgSubDomain = m.lcOrgName                      && Organization subdomain
@@ -665,13 +665,19 @@ IF !m.loRICDATAU.IsOK
    ? "error:", m.loRICDATAU.ErrorMessage
    =m.loRICAPI.AddToLog("error: "+m.loRICDATAU.ErrorMessage+CHR(13)+CHR(10))
 ELSE
-   ? ALLTRIM(STR(m.loRICDATAU.datacount))+" property(ies)"
-   FOR m.lii = 1 TO m.loRICDATAU.datacount
-       WITH m.loRICDATAU.data(m.lii)
-       ?.ric_sys_modified, .ric_weight, .ric_grain
-       *!*?.ric_sys_modified, .RIC_P1, .RIC_P2, .RIC_P3, .RIC_P4, .RIC_P5, .RIC_P6
-       ENDWITH
-   ENDFOR
+*!*	   ? ALLTRIM(STR(m.loRICDATAU.datacount))+" property(ies)"
+*!*	   FOR m.lii = 1 TO m.loRICDATAU.datacount
+*!*	       WITH m.loRICDATAU.data(m.lii)       
+*!*	       ?.ric_sys_modified, .ric_weight, .ric_grain
+*!*	       *!*?.ric_sys_modified, .RIC_P1, .RIC_P2, .RIC_P3, .RIC_P4, .RIC_P5, .RIC_P6
+*!*	       ENDWITH
+*!*	   ENDFOR
+   AMEMBERS(propArray,m.loRICDATAU.data[1])	
+   ? ALLTRIM(STR(ALEN(m.propArray)))+" property(ies)"
+   FOR lnX = 1 TO ALEN(m.propArray)
+	  ? propArray[lnX], m.loRICDATAU.data[1].&propArray[lnX]
+   ENDFOR	
+   ? m.loRICDATAU.data[1].ric_sys_modified, m.loRICDATAU.data[1].ric_weight, m.loRICDATAU.data[1].ric_grain
 ENDIF
 RELE m.loProperty, m.lii
 
@@ -706,15 +712,30 @@ IF !m.loRICDATAU.IsOK
    ? "error:", m.loRICDATAU.ErrorMessage
    =m.loRICAPI.AddToLog("error: "+m.loRICDATAU.ErrorMessage+CHR(13)+CHR(10))
 ELSE
-   ? ALLTRIM(STR(m.loRICDATAU.datacount))+" property(ies)"
-   FOR m.lii = 1 TO m.loRICDATAU.datacount
-       m.loProperty = m.loRICDATAU.data(m.lii)
-       ?m.loProperty.ric_sys_modified, m.loProperty.ric_invoiceno, m.loProperty.ric_CustomerNo
-   ENDFOR
+*!*   ? ALLTRIM(STR(m.loRICDATAU.datacount))+" property(ies)"   
+*!*	   FOR m.lii = 1 TO m.loRICDATAU.datacount
+*!*	       m.loProperty = m.loRICDATAU.data(m.lii)
+*!*	       ?m.loProperty.ric_sys_modified, m.loProperty.ric_invoiceno, m.loProperty.ric_CustomerNo
+*!*	   ENDFOR
+   AMEMBERS(propArray,m.loRICDATAU.data[1])	
+   ? ALLTRIM(STR(ALEN(m.propArray)))+" property(ies)"
+   FOR lnX = 1 TO ALEN(m.propArray)
+	  ? propArray[lnX], m.loRICDATAU.data[1].&propArray[lnX]
+   ENDFOR	
+   ? m.loRICDATAU.data[1].ric_sys_modified, m.loRICDATAU.data[1].ric_invoiceno, m.loRICDATAU.data[1].ric_CustomerNo
 ENDIF
 RELE m.loProperty, m.lii
 
 
+IF MESSAGEBOX("The demo organization has been set up. You can now review the organization online at "+CHR(13)+;
+	"https://"+m.lcOrgSubDomain+".reportsincloud.com"+CHR(13)+;
+	"(the address was copied to your clipboard)"+CHR(13)+;
+	+CHR(13)+;
+	"Would you like to continue with the demo?"+CHR(13)+CHR(13)+;
+	"If you click yes, the process will delete the demo reports, properties and users it has just created."+CHR(13)+;
+	"if you click no, the process will stop and leave the demo data as it is now", 4) <> 6
+	RETURN
+ENDIF
 
 
 ?"===================="

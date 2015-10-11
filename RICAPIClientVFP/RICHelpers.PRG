@@ -904,15 +904,16 @@ DEFINE CLASS RIC_FoldersAPIClient AS RIC_ObjectsAPIClient
       DODEFAULT()
       m.lcValue = This.Parent.Parent.Dictionary.ToString(m.lcID,m.luValue)
    	  m.loRetVal = CREATEOBJECT("RIC_StructuredErrorValue")
-	  IF SUBSTR(m.lcValue,1,14) = "####ERROR#### "
+	  IF SUBSTR(m.lcValue,1,1) = "####RIC_ERROR#### "
 	      m.loRetVal.isOK = .f.
-	      m.loRetVal.ErrorMessage = SUBSTR(m.lcValue,15)
+	      m.loRetVal.ErrorMessage = SUBSTR(m.lcValue,19)
           This.nCache=This.nCache-1
 	  ELSE
 	  	  m.loRetVal.isOK = .t.
           This.aCache(This.nCache,1) = m.lcID
           This.aCache(This.nCache,2) = m.lcValue      
 	  ENDIF
+	  RETURN m.loRetVal
    ENDPROC
 
    PROCEDURE PCache.Flush(m.tcFolderFullPath)
@@ -1064,9 +1065,9 @@ DEFINE CLASS RIC_ReportsAPIClient AS RIC_ObjectsAPIClient
       DODEFAULT()
       m.lcValue = This.Parent.Parent.Dictionary.ToString(m.lcID,m.luValue)
    	  m.loRetVal = CREATEOBJECT("RIC_StructuredErrorValue")
-	  IF SUBSTR(m.lcValue,1,14) = "####ERROR#### "
+	  IF SUBSTR(m.lcValue,1,18) = "####RIC_ERROR#### "
 	      m.loRetVal.isOK = .f.
-	      m.loRetVal.ErrorMessage = SUBSTR(m.lcValue,15)
+	      m.loRetVal.ErrorMessage = SUBSTR(m.lcValue,19)
           This.nCache=This.nCache-1	      
 	  ELSE
 	  	  m.loRetVal.isOK = .t.
@@ -1421,7 +1422,7 @@ DEFINE CLASS RIC_DictionaryAPIClient AS RIC_ObjectsAPIClient
               RETURN IIF(TYPE("m.luValue")="L", IIF(m.luValue,"true","false"),IIF(m.luValue=0,"false","true"))
          
          OTHERWISE
-              RETURN "####ERROR#### Property data type = "+m.DataTypeProp+" and value data type (VARTYPE) = "+m.DataTypeValue+" are not compatible.";
+              RETURN "####RIC_ERROR#### Property data type = "+m.DataTypeProp+" and value data type (VARTYPE) = "+m.DataTypeValue+" are not compatible.";
          
       ENDCASE
    ENDPROC
