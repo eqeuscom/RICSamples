@@ -106,9 +106,9 @@ ENDIF
 ?"=========================="
 ?"Update organization object"
 ?""
-m.loRICDATA.Data[1].RIC_UserQuota=10 && nelze zmìnit
+m.loRICDATA.Data[1].RIC_UserQuota=10
 m.loRICDATA.Data[1].RIC_LoginMessage="Welcome to the RIC demo organization"
-m.loRICDATA.Data[1].RIC_DefaultLanguage="cs" && nelze zmìnit
+m.loRICDATA.Data[1].RIC_DefaultLanguage="cs"
 m.loRICDATA2=m.loRICAPI.Update(m.loRICDATA.Data[1])
 IF !m.loRICDATA2.IsOK
    ? "error:", m.loRICDATA2.ErrorMessage
