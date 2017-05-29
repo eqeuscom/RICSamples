@@ -682,6 +682,11 @@ DEFINE CLASS RIC_User AS Custom
    RIC_Language=""
 
    RIC_Password = ""
+   RIC_RootFolder = ""
+   RIC_StartPage = ""
+   RIC_StartPageFullPath =""
+   RIC_Theme = ""
+   
 ENDDEFINE
 
 
@@ -700,7 +705,11 @@ DEFINE CLASS RIC_UsersAPIClient AS RIC_ObjectsAPIClient
       =FPUTS(m.lnh, "IsAdmin "+IIF(m.toUser.RIC_IsAdmin,"true","false"))
       =FPUTS(m.lnh, "Roles "+m.toUser.RIC_Roles)
       =FPUTS(m.lnh, "Email "+m.toUser.RIC_Email)
-      =FPUTS(m.lnh, "Language "+m.toUser.RIC_Language)
+      =FPUTS(m.lnh, "Language "+LOWER(m.toUser.RIC_Language))
+      =FPUTS(m.lnh, "RootFolder "+PROPER(m.toUser.RIC_RootFolder))
+	  =FPUTS(m.lnh, "StartPage "+m.toUser.RIC_StartPage)
+	  =FPUTS(m.lnh, "StartPageFullPath "+m.toUser.RIC_StartPageFullPath)
+	  =FPUTS(m.lnh, "Theme "+m.toUser.RIC_Theme)
       =FPUTS(m.lnh, "]")
       =FCLOSE(m.lnh)
       RETURN m.lcFile
@@ -840,8 +849,11 @@ DEFINE CLASS RIC_FoldersAPIClient AS RIC_ObjectsAPIClient
    Name="RIC_FoldersAPIClient"
    
    PROCEDURE Add
-      LPARAMETERS m.tcFolderFullPath
-      RETURN This.CallAPI("ADDFOLDER",This.MergeParameters1(m.tcFolderFullPath))
+      LPARAMETERS m.tcFolderFullPath, m.tiFolderOrder
+      IF PARAMETERS() < 2
+	     m.tiFolderOrder = 0
+	  ENDIF
+      RETURN This.CallAPI("ADDFOLDER",This.MergeParameters2(m.tcFolderFullPath,LTRIM(STR(m.tiFolderOrder,10))))
    ENDPROC
 
    PROCEDURE Delete
@@ -1000,9 +1012,10 @@ DEFINE CLASS RIC_ReportsAPIClient AS RIC_ObjectsAPIClient
    ENDPROC
 
 
-*!*    PROCEDURE GetList
-*!*       RETURN This.CallAPI("GETREPORTS","")
-*!*    ENDPROC
+   PROCEDURE GetList
+	   LPARAMETERS m.tcFullPath
+       RETURN This.CallAPI("GETREPORTS",m.tcFullPath)
+   ENDPROC
 
 *!*    PROCEDURE Get
 *!*       LPARAMETERS m.tcReportFullPath
@@ -1026,13 +1039,24 @@ DEFINE CLASS RIC_ReportsAPIClient AS RIC_ObjectsAPIClient
 *!*    ENDPROC
 
    PROCEDURE Upload
-      LPARAMETERS m.tcXmlFileName, m.tcRemoteLocation
-      RETURN This.CallAPI("UPLOADREPORT",This.MergeParameters2(m.tcXmlFileName, m.tcRemoteLocation))
+      LPARAMETERS m.tcXmlFileName, m.tcRemoteLocation, m.tnOrder
+      IF PARAMETERS() < 3
+         m.tnOrder = 0
+      ENDIF
+      RETURN This.CallAPI("UPLOADREPORT",This.MergeParameters3(m.tcXmlFileName, m.tcRemoteLocation, ALLTRIM(STR(m.tnOrder))))
+   ENDPROC
+
+   PROCEDURE UploadBinary
+      LPARAMETERS m.tcFileName, m.tcRemoteLocation, m.tcType, m.tnOrder
+      IF PARAMETERS() < 4
+         m.tnOrder = 0
+      ENDIF
+      RETURN This.CallAPI("UPLOADFILE",This.MergeParameters4(m.tcFileName, m.tcRemoteLocation, m.tcType, ALLTRIM(STR(m.tnOrder))))
    ENDPROC
 
    PROCEDURE UploadExportedFile
       LPARAMETERS m.tcXmlFileName, m.tcType, m.tcRemoteLocation
-      RETURN This.CallAPI("UPLOADEXPORTEDFILE",This.MergeParameters3(m.tcXmlFileName, m.tcType, m.tcRemoteLocation))
+      RETURN This.CallAPI("UPLOADEXPORTEDFILE",This.MergeParameters4(m.tcXmlFileName, m.tcType, m.tcRemoteLocation, "0"))
    ENDPROC
 
 
@@ -1409,7 +1433,7 @@ DEFINE CLASS RIC_DictionaryAPIClient AS RIC_ObjectsAPIClient
          CASE (m.DataTypeProp=="STRING" OR m.DataTypeProp=="VARCHAR") AND m.DataTypeValue == "C"
               RETURN m.luValue
               
-         CASE m.DataTypeProp=="DECIMAL" AND m.DataTypeValue == "N"
+         CASE (m.DataTypeProp=="DECIMAL" OR m.DataTypeProp=="NUMERIC") AND m.DataTypeValue == "N"
               RETURN LTRIM(CHRTRAN(TRANSFORM(m.luValue,""),',','.'))
          
          CASE m.DataTypeProp=="DATE" AND m.DataTypeValue == "D"
@@ -1418,7 +1442,7 @@ DEFINE CLASS RIC_DictionaryAPIClient AS RIC_ObjectsAPIClient
          CASE m.DataTypeProp=="DATETIME" AND m.DataTypeValue == "T"
               RETURN CHRTRAN("1234-56-78 AB:CD:EF","12345678ABCDEF",TTOC(m.luValue,1))
          
-         CASE m.DataTypeProp=="BIT" AND m.DataTypeValue == "L"
+         CASE (m.DataTypeProp=="BIT" OR m.DataTypeProp=="BOOL") AND m.DataTypeValue == "L"
               RETURN IIF(TYPE("m.luValue")="L", IIF(m.luValue,"true","false"),IIF(m.luValue=0,"false","true"))
          
          OTHERWISE
@@ -1437,7 +1461,7 @@ DEFINE CLASS RIC_DictionaryAPIClient AS RIC_ObjectsAPIClient
          CASE m.DataTypeProp=="STRING" OR m.DataTypeProp=="VARCHAR"
               RETURN m.lcValue
               
-         CASE m.DataTypeProp=="DECIMAL"
+         CASE m.DataTypeProp=="DECIMAL" OR m.DataTypeProp=="NUMERIC"
               RETURN VAL(CHRTRAN(m.lcValue,".",SET("POINT")))
          
          CASE m.DataTypeProp=="DATE"

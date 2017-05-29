@@ -121,6 +121,13 @@ ENDIF
 m.loRICAPI.Open(m.lcOrgSubDomain, m.lcSecret)
 
 
+?"Upload a sample PDF document"
+m.loRICDATAU = m.loRICAPI.Reports.UploadBinary("sample.pdf", "test/sample.pdf", "PDF", 0)
+IF !m.loRICDATAU.IsOK
+   ? "error:", m.loRICDATAU.ErrorMessage    
+   =m.loRICAPI.AddToLog("error: "+m.loRICDATAU.ErrorMessage+CHR(13)+CHR(10))
+ENDIF
+
 ?"================"
 ?"Add role denarii"
 ?""
